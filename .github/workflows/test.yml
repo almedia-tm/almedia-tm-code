@@ -1,0 +1,93 @@
+name: test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  syntax:
+    name: syntax (${{ matrix.os }} / node ${{ matrix.node }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node: [18, 20, 22]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Install deps
+        run: npm install
+
+      - name: Validate JSON manifests
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('package.json'))"
+          node -e "JSON.parse(require('fs').readFileSync('.claude-plugin/plugin.json'))"
+          node -e "JSON.parse(require('fs').readFileSync('.claude-plugin/marketplace.json'))"
+          node -e "JSON.parse(require('fs').readFileSync('hooks/hooks.json'))"
+
+      - name: Syntax-check all JS
+        run: |
+          node --check bin/almedia-code.js
+          node --check hooks/scripts/style-activate.js
+          node --check hooks/scripts/codemap-nudge.js
+          node --check scripts/install.js
+          node --check scripts/update.js
+          node --check scripts/uninstall.js
+          node --check scripts/wizard.js
+          node --check scripts/lib/detect-claude.js
+          node --check scripts/lib/settings-merge.js
+          node --check scripts/lib/mcp-shrink.js
+          node --check scripts/lib/style-cmd.js
+
+      - name: Help and version run
+        run: |
+          node bin/almedia-code.js --help
+          node bin/almedia-code.js --version
+
+      - name: Frontmatter check on agents/commands/skills/styles
+        shell: bash
+        run: |
+          for f in agents/*.md commands/*.md skills/*/SKILL.md styles/*.md; do
+            head -1 "$f" | grep -q '^---' || { echo "FAIL: $f missing frontmatter"; exit 1; }
+          done
+          echo "All markdown files have frontmatter"
+
+      - name: AGPL contamination check
+        shell: bash
+        run: |
+          # Defensive guard: ensure no claude-mem source code is vendored.
+          # claude-mem is AGPL-3.0; we invoke it via npx at user opt-in time
+          # (scripts/install.js / scripts/uninstall.js), but we never bundle it.
+          # The grep allowlist below is the only legitimate place for the
+          # string `claude-mem` — anywhere else is a vendoring attempt.
+          if grep -rl 'claude-mem' --include='*.js' --include='*.json' --include='*.md' . | grep -v 'docs/' | grep -v 'README.md' | grep -v 'scripts/install.js' | grep -v 'scripts/uninstall.js'; then
+            echo "FAIL: claude-mem source code may have been vendored"
+            exit 1
+          fi
+          echo "No claude-mem source vendored"
+
+  smoke:
+    name: smoke install (ubuntu only)
+    runs-on: ubuntu-latest
+    needs: syntax
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Smoke check non-interactive flow (no actual install)
+        run: |
+          npm install
+          # Just ensure the wizard is import-safe
+          node -e "require('./scripts/wizard.js')"
+          # Validate detect-claude doesn't throw when claude is absent
+          node -e "require('./scripts/lib/detect-claude.js').find().then(r => console.log('detect:', r))"
