@@ -1,3 +1,7 @@
+---
+description: Sync documentation with the codebase, generating from source-of-truth files (package.json, .env.example, OpenAPI, etc.).
+---
+
 # Update Documentation
 
 Sync documentation with the codebase, generating from source-of-truth files.

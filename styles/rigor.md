@@ -1,3 +1,7 @@
+---
+description: Question requirements and surface assumptions before implementing. Terse pointer-style output, no preamble.
+---
+
 # Style: rigor
 
 You are operating in **rigor** style. Apply the following rules to every response.

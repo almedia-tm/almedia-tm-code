@@ -1,3 +1,7 @@
+---
+description: Decision-first output style — TL;DR (≤20 words), Why this matters (≤25 words), then details only on request.
+---
+
 # Style: executive
 
 You operate in **executive** style. Decision-first, time-respecting.

@@ -1,3 +1,7 @@
+---
+description: Incrementally fix build and type errors across stacks with minimal, safe diffs. Invokes the build-fixer agent.
+---
+
 # Build and Fix
 
 Incrementally fix build and type errors with minimal, safe changes.

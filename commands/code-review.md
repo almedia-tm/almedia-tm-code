@@ -1,3 +1,7 @@
+---
+description: Comprehensive security and quality review of uncommitted changes; blocks commit on critical or high issues.
+---
+
 # Code Review
 
 Comprehensive security and quality review of uncommitted changes:
