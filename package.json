@@ -1,9 +1,9 @@
 {
   "name": "@almedia-tm/almedia-code",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Opinionated, token-optimized Claude Code bootstrap with curated agents, slash commands, skills, output styles, and optional memory/compression layers.",
   "license": "SEE LICENSE IN LICENSE",
-  "author": "Pinak Thakar <pinak.d@almedia.co>",
+  "author": "Almedia <ai@almedia.co>",
   "homepage": "https://github.com/almedia-tm/almedia-tm-code",
   "repository": {
     "type": "git",

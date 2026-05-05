@@ -2,7 +2,7 @@
   "name": "almedia-code",
   "owner": {
     "name": "Almedia",
-    "email": "pinak.d@almedia.co"
+    "email": "ai@almedia.co"
   },
   "description": "Almedia's curated Claude Code plugin: token-optimized bootstrap with agents, slash commands, skills, output styles, and hooks.",
   "plugins": [
@@ -10,10 +10,10 @@
       "name": "almedia-code",
       "source": "./",
       "description": "Token-optimized Claude Code bootstrap: 17 agents, 22 commands, 10 auto-routing skills, 5 output styles, 2 hooks.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "author": {
-        "name": "Pinak Thakar",
-        "email": "pinak.d@almedia.co"
+        "name": "Almedia",
+        "email": "ai@almedia.co"
       },
       "homepage": "https://github.com/almedia-tm/almedia-tm-code",
       "repository": "https://github.com/almedia-tm/almedia-tm-code",
