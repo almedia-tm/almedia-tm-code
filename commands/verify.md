@@ -1,3 +1,7 @@
+---
+description: Run comprehensive verification on the current codebase state — build, types, lint, tests, console.log audit, git status.
+---
+
 # Verification Command
 
 Run comprehensive verification on current codebase state.

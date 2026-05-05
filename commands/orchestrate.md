@@ -1,3 +1,7 @@
+---
+description: Sequential agent workflow for complex tasks (feature, bugfix, refactor, security) with structured handoffs.
+---
+
 # Orchestrate Command
 
 Sequential agent workflow for complex tasks.

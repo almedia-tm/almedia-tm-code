@@ -1,3 +1,7 @@
+---
+description: Run the on-demand quality pipeline (formatter, lint/types, language reviewer, security) for a file or project scope.
+---
+
 # Quality Gate Command
 
 Run the quality pipeline on demand for a file or project scope.

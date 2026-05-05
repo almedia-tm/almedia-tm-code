@@ -1,3 +1,7 @@
+---
+description: Create or verify a workflow checkpoint with build/test status and coverage comparison.
+---
+
 # Checkpoint Command
 
 Create or verify a checkpoint in your workflow.

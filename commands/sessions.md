@@ -1,3 +1,7 @@
+---
+description: List Claude Code session history files in ~/.claude/sessions/ sorted by modification time (newest first).
+---
+
 # Sessions Command
 
 List Claude Code session history files in `~/.claude/sessions/`.
