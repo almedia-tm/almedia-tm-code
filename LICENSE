@@ -1,0 +1,125 @@
+ALMEDIA PROPRIETARY LICENSE
+Version 1.0, 2026
+
+Copyright (c) 2026 Almedia. All rights reserved.
+
+1. DEFINITIONS
+
+   "Almedia" means Almedia and its affiliated entities, employees,
+   contractors, and authorized agents.
+
+   "Software" means the source code, configuration files, scripts,
+   documentation, and other materials contained in this repository,
+   collectively distributed as the "almedia-code" package.
+
+   "Authorized Personnel" means current employees, contractors, and
+   authorized agents of Almedia, acting in that capacity.
+
+   "External User" means any person or entity that is not Authorized
+   Personnel.
+
+2. INTERNAL USE GRANT (ALMEDIA)
+
+   Authorized Personnel are granted a perpetual, royalty-free license
+   to use, copy, modify, distribute internally within Almedia, and
+   create derivative works of the Software for any internal Almedia
+   purpose.
+
+3. EXTERNAL USE GRANT (NON-ALMEDIA)
+
+   External Users are granted a limited, non-exclusive, non-transferable,
+   revocable license to:
+
+   (a) install and execute the unmodified Software for their own personal
+       or internal business use; and
+
+   (b) view the source code of the Software for the purpose of evaluating
+       its behavior.
+
+   External Users SHALL NOT:
+
+   (a) copy, fork, modify, translate, port, or create derivative works of
+       the Software, in whole or in part;
+
+   (b) redistribute, sublicense, sell, rent, lease, or otherwise transfer
+       the Software or any portion of it to any third party;
+
+   (c) extract, reuse, or incorporate any portion of the Software into
+       another work, product, or service;
+
+   (d) remove, obscure, or alter this license, any copyright notice, or
+       any other proprietary notice contained in the Software;
+
+   (e) use the Software, in whole or in part, to develop, train, or
+       improve a product or service that is substantially similar to or
+       competitive with the Software; or
+
+   (f) use the name "Almedia," any Almedia trademark, or any confusingly
+       similar mark in connection with any derivative or related work.
+
+4. TRADEMARKS
+
+   "Almedia" and any associated names, logos, and trademarks are the
+   property of Almedia. No license to use any Almedia trademark is
+   granted under this license, whether by implication, estoppel, or
+   otherwise.
+
+5. CONTRIBUTIONS
+
+   Any contribution submitted by an External User to this repository is
+   deemed assigned to Almedia, and may be incorporated into the Software
+   under this license without further obligation to the contributor.
+
+6. TERMINATION
+
+   The External Use Grant in Section 3 may be terminated by Almedia at
+   any time, for any reason, by publishing notice in this repository or
+   by direct written notice to the External User. Upon termination, the
+   External User shall promptly cease all use of the Software and delete
+   all copies in their possession or control.
+
+   Any breach by an External User of Section 3 terminates the External
+   Use Grant automatically, without notice.
+
+7. NO WARRANTY
+
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND
+   NON-INFRINGEMENT. ALMEDIA DOES NOT WARRANT THAT THE SOFTWARE WILL BE
+   ERROR-FREE OR UNINTERRUPTED.
+
+8. LIMITATION OF LIABILITY
+
+   IN NO EVENT SHALL ALMEDIA BE LIABLE FOR ANY DIRECT, INDIRECT,
+   INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+   BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+   OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+   AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+   LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY
+   WAY OUT OF THE USE OF THE SOFTWARE, EVEN IF ADVISED OF THE
+   POSSIBILITY OF SUCH DAMAGE.
+
+9. THIRD-PARTY COMPONENTS
+
+   The Software may, at the user's option, install or invoke independent
+   third-party packages distributed under their own license terms (for
+   example, optional persistent-memory or input-compression add-ons).
+   Such third-party packages are not part of the Software and remain
+   governed by their own respective licenses. Almedia makes no
+   representation regarding any third-party package.
+
+10. GOVERNING LAW AND JURISDICTION
+
+    This license shall be governed by and construed in accordance with
+    the laws of the Federal Republic of Germany, without regard to its
+    conflict of laws principles. Any dispute arising under or in
+    connection with this license shall be subject to the exclusive
+    jurisdiction of the competent courts of the Federal Republic of
+    Germany.
+
+11. ENTIRE AGREEMENT
+
+    This license constitutes the entire agreement between Almedia and
+    any user of the Software with respect to its subject matter, and
+    supersedes all prior or contemporaneous understandings.

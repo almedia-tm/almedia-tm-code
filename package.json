@@ -1,0 +1,59 @@
+{
+  "name": "@almedia-tm/almedia-code",
+  "version": "0.1.0",
+  "description": "Opinionated, token-optimized Claude Code bootstrap with curated agents, slash commands, skills, output styles, and optional memory/compression layers.",
+  "license": "SEE LICENSE IN LICENSE",
+  "author": "Pinak Thakar <pinak.d@almedia.co>",
+  "homepage": "https://github.com/almedia-tm/almedia-tm-code",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/almedia-tm/almedia-tm-code.git"
+  },
+  "bugs": {
+    "url": "https://github.com/almedia-tm/almedia-tm-code/issues"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "bin": {
+    "almedia-code": "./bin/almedia-code.js"
+  },
+  "main": "./bin/almedia-code.js",
+  "files": [
+    "bin/",
+    "scripts/",
+    "agents/",
+    "commands/",
+    "skills/",
+    "styles/",
+    "hooks/",
+    ".claude-plugin/",
+    "docs/",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test scripts/**/*.test.js",
+    "lint": "node -e \"const fs=require('fs');const files=require('fast-glob').sync(['**/*.js','!node_modules/**']);files.forEach(f=>{try{require('child_process').execSync('node --check '+f,{stdio:'pipe'})}catch(e){console.error(f, e.stderr.toString());process.exit(1)}});console.log('All JS files pass --check')\""
+  },
+  "dependencies": {
+    "prompts": "^2.4.2",
+    "which": "^4.0.0"
+  },
+  "optionalDependencies": {
+    "clipboardy": "^4.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "claude-code",
+    "claude",
+    "anthropic",
+    "agents",
+    "slash-commands",
+    "plugin",
+    "token-optimization",
+    "almedia"
+  ]
+}

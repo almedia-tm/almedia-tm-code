@@ -1,0 +1,19 @@
+{
+  "name": "almedia-code",
+  "version": "0.1.0",
+  "description": "Token-optimized Claude Code bootstrap: 17 agents, 22 commands, 10 auto-routing skills, 5 output styles, 2 hooks.",
+  "author": {
+    "name": "Pinak Thakar",
+    "email": "pinak.d@almedia.co"
+  },
+  "homepage": "https://github.com/almedia-tm/almedia-tm-code",
+  "repository": "https://github.com/almedia-tm/almedia-tm-code",
+  "license": "SEE LICENSE IN LICENSE",
+  "keywords": [
+    "claude-code",
+    "agents",
+    "slash-commands",
+    "token-optimization",
+    "almedia"
+  ]
+}
