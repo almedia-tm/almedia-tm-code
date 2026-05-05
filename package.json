@@ -7,7 +7,7 @@
   "homepage": "https://github.com/almedia-tm/almedia-tm-code",
   "repository": {
     "type": "git",
-    "url": "https://github.com/almedia-tm/almedia-tm-code.git"
+    "url": "git+https://github.com/almedia-tm/almedia-tm-code.git"
   },
   "bugs": {
     "url": "https://github.com/almedia-tm/almedia-tm-code/issues"
@@ -16,7 +16,7 @@
     "node": ">=18"
   },
   "bin": {
-    "almedia-code": "./bin/almedia-code.js"
+    "almedia-code": "bin/almedia-code.js"
   },
   "main": "./bin/almedia-code.js",
   "files": [
