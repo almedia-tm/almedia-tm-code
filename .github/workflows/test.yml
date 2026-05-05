@@ -64,11 +64,29 @@ jobs:
         run: |
           # Defensive guard: ensure no claude-mem source code is vendored.
           # claude-mem is AGPL-3.0; we invoke it via npx at user opt-in time
-          # (scripts/install.js / scripts/uninstall.js), but we never bundle it.
-          # The grep allowlist below is the only legitimate place for the
-          # string `claude-mem` — anywhere else is a vendoring attempt.
-          if grep -rl 'claude-mem' --include='*.js' --include='*.json' --include='*.md' . | grep -v 'docs/' | grep -v 'README.md' | grep -v 'scripts/install.js' | grep -v 'scripts/uninstall.js'; then
-            echo "FAIL: claude-mem source code may have been vendored"
+          # but we never bundle it. The allowlist below names every file that
+          # may legitimately mention the string `claude-mem` (CLI help text,
+          # wizard prompts, install/uninstall scripts, user-facing docs, the
+          # harness-audit scoring rubric). Anywhere else is a vendoring attempt.
+          # node_modules is excluded because `npm install` runs before this
+          # check — a transitive dep mentioning claude-mem in its README is
+          # not contamination on our part.
+          # Normalize the leading ./ that GNU grep emits but BSD grep strips,
+          # then anchor each allowlist entry against the bare path.
+          hits=$(grep -rl 'claude-mem' --include='*.js' --include='*.json' --include='*.md' . \
+            --exclude-dir=node_modules \
+            | sed 's|^\./||' \
+            | grep -v '^docs/' \
+            | grep -v '^README\.md$' \
+            | grep -v '^scripts/install\.js$' \
+            | grep -v '^scripts/uninstall\.js$' \
+            | grep -v '^scripts/wizard\.js$' \
+            | grep -v '^bin/almedia-code\.js$' \
+            | grep -v '^commands/harness-audit\.md$' \
+            || true)
+          if [ -n "$hits" ]; then
+            echo "FAIL: claude-mem source code may have been vendored in:"
+            echo "$hits"
             exit 1
           fi
           echo "No claude-mem source vendored"
