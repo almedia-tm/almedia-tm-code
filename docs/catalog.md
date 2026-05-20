@@ -37,7 +37,7 @@ You invoke agents explicitly via the `Agent` tool or via slash commands that wra
 
 ---
 
-## Slash commands (22)
+## Slash commands (23)
 
 Type these in Claude Code with the plugin namespace prefix: `/almedia-code:<name>` (e.g. `/almedia-code:plan`). The bare `/<name>` form below is shown for readability.
 
@@ -49,11 +49,12 @@ Type these in Claude Code with the plugin namespace prefix: `/almedia-code:<name
 - **`/test-coverage`** — Coverage analysis with gap detection.
 
 ### Workflow
-- **`/plan`** — Run plan agent. WAITS for user confirm before any code.
+- **`/plan`** — Run plan agent. Emits dispatch matrix. WAITS for user confirm before any code.
+- **`/plan-execute`** — Plan + content-aware parallel agent dispatch. Auto-bootstraps `CLAUDE.md` + `.claude/` on new projects, then fans out reviewers/testers in dependency-aware batches.
 - **`/tdd`** — RED → GREEN → REFACTOR.
 - **`/orchestrate`** — Sequential agent workflow (feature/bugfix/refactor/security).
-- **`/multi-frontend`** — Parallel agents for large UI/UX work.
-- **`/multi-backend`** — Parallel agents for large API/DB work.
+- **`/multi-frontend`** — Parallel agents for large UI/UX work (pre-baked frontend roles).
+- **`/multi-backend`** — Parallel agents for large API/DB work (pre-baked backend roles).
 
 ### Operations
 - **`/build-fix`** — Invoke build-fixer agent.
