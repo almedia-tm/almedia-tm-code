@@ -73,7 +73,7 @@ Type these in Claude Code with the plugin namespace prefix: `/almedia-code:<name
 
 ---
 
-## Auto-routing skills (10)
+## Auto-routing skills (11)
 
 Skills auto-trigger based on what you say to Claude. You don't invoke them directly — Claude picks them.
 
@@ -89,6 +89,7 @@ Skills auto-trigger based on what you say to Claude. You don't invoke them direc
 | `switch-style` | "be more concise", "TL;DR" | `/style` |
 | `db-change` | new migration, schema diff | Routes to `db-reviewer` |
 | `security-check` | auth/payment/webhook code | Routes to `security-reviewer` |
+| `freecash-design` | "design X", "mock up Y", "Freecash" + UI intent | Renders Freecash-accurate HTML/React against `tokens.md` + `components.md` + `layouts.md` + reference screens |
 
 ---
 
@@ -133,5 +134,6 @@ Both off by default. Enable during `init` or via `npx @almedia-tm/almedia-code i
 - **Developers** (TS / Python / Go / Rust): use the language reviewers, `/tdd`, `/quality-gate`, `/code-review`, debugger.
 - **Database / backend engineers**: `db-reviewer`, `security-reviewer`, `/multi-backend`.
 - **Frontend engineers**: `/multi-frontend`, `e2e`, `/update-codemaps`.
+- **Designers / frontend on Freecash surfaces**: the `freecash-design` skill auto-triggers on design intent and renders Freecash-accurate HTML/React using the embedded tokens, components, and layout system.
 - **Non-technical users / writers / PMs**: pick the `executive` or `teacher` style. The agents and commands are still useful for code-adjacent work; the style takes the technical jargon out of the conversation.
 - **Cost-conscious users**: enable `caveman-shrink`, switch to `caveman` style for max savings.
