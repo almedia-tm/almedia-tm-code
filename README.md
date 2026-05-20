@@ -1,6 +1,6 @@
 # almedia-code
 
-> Token-optimized Claude Code bootstrap: 17 agents, 22 commands, 11 auto-routing skills (incl. Freecash design system), 5 output styles, 2 hooks.
+> Token-optimized Claude Code bootstrap: 17 agents, 23 commands (incl. /plan-execute auto-dispatch), 11 auto-routing skills (incl. Freecash design system), 5 output styles, 2 hooks.
 
 Built for technical and non-technical users who want a working Claude Code setup without the bloat.
 
@@ -26,7 +26,7 @@ That's it. The installer:
 | Type | Count | Purpose |
 |---|---|---|
 | Agents | 17 | Specialized assistants you invoke for review, debug, plan, build-fix, etc. |
-| Slash commands | 22 | One-keystroke workflows (`/plan`, `/tdd`, `/code-review`, …) |
+| Slash commands | 23 | One-keystroke workflows (`/plan`, `/plan-execute`, `/tdd`, `/code-review`, …) |
 | Skills | 11 | Auto-routing wrappers — Claude picks the right tool based on what you ask (incl. `freecash-design`) |
 | Output styles | 5 | Choose how Claude talks to you: rigor, caveman, teacher, executive, default |
 | Hooks | 2 | Style activator + codemap nudge — both Node, both fast |
