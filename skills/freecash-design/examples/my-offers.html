@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=390, initial-scale=1" />
+<title>Freecash — My Offers (V1 reference)</title>
+
+<!-- Phosphor Icons — Regular + Fill weights.
+     Used for most UI icons on this screen. Exceptions that stay inline SVG:
+       - 5 bottom-nav tab glyphs (Freecash `navigation icons` set, layouts.md)
+       - Bell icon (custom Freecash glyph with integrated notification dot)
+       - Status-bar signal / wifi / battery (iOS chrome, not UI icons) -->
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css"/>
+<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css"/>
+
+<!--
+  Freecash Design System / examples / my-offers.html
+  ---------------------------------------------------
+  Source frame : My Offers  (Figma node 13011:13202)
+  File key     : 72LO7OX0mwAT9uZdNg1vlG
+  Captured     : 2026-04-23
+
+  PURPOSE
+  -------
+  Second canonical visual reference, paired with earn.html. Every style
+  primitive shared with earn.html uses the same token and the same CSS
+  approach so Claude can pattern-match across both files when generating
+  new Freecash screens.
+
+  CONVENTIONS INHERITED FROM earn.html (no changes)
+  -------------------------------------------------
+  - Header (108px) — Status Bar + Header balance with 3 colored chips
+    centered between avatar and green bell.
+  - Artwork slots render as gradient backgrounds with a soft centered
+    4-point sparkle/star mask — NOT empty fills, NOT fake illustrations.
+  - Bell icon is green, inline SVG (NOT Phosphor).
+  - Bottom TabBar active tab uses the soft green glow-halo ellipse,
+    and its 5 tab glyphs are inline SVG (NOT Phosphor).
+
+  NEW TO THIS SCREEN
+  ------------------
+  - Horizontal Menu (sticky, horizontally scrollable) — 5× tab_primary
+    pills, "Earn" selected. Overflow-x: auto so Surveys / Rewards /
+    Referrals can scroll into view.
+  - Bubbles row — 5× 70×70 active-offer pips with 76×76 green ring.
+    First pip full opacity, rest at 30% (image only — ring & label have
+    their own inactive treatments).
+  - Active Offer Header — hero stat row for the currently-earning offer.
+  - Inner sub-tab bar — tab_secondary with underline indicator.
+    Text-only labels, no icons.
+  - Reward-Category Sections — colored category sections listing reward
+    rows. Each section's color is a *categorical* accent (yellow=Bonus,
+    cyan=Play, fuschia=Limited) NOT decorative.
+
+  ICONS
+  -----
+  Most UI icons are Phosphor (loaded via CDN above). Fill weight is used
+  for emphasized / active / filled-in-Figma states; Regular weight is
+  used for utility icons (info, lock, hourglass, etc.).
+  Exceptions that stay inline SVG:
+    (1) The 5 bottom-nav tab glyphs — Freecash-proprietary, see
+        layouts.md "navigation icons" component set.
+    (2) The bell icon in the Header — custom glyph with integrated
+        notification dot.
+    (3) Status-bar cellular / wifi / battery — iOS chrome.
+  The sparkle placeholders inside artwork slots are CSS-only (SVG mask
+  in a background-image), not icons — they stay as-is.
+
+  LOCAL-ONLY COLORS (not in tokens.md, not candidates for promotion)
+  -----------------------------------------------------------------
+  Two tints appear on this screen only and intentionally do not map to
+  tokens.md: cyan (#00FFDD) and sky-blue (#7FD9FA). Per team direction
+  these are screen-local, not design-system tokens. They are declared
+  in :root with a `--local-*` prefix to make that explicit.
+
+  CONTENT-SECTION FRESHNESS NOTE
+  ------------------------------
+  The Content sub-region of Offer Details (the stack of Reward-Category
+  Sections) was reduced after the initial Figma extraction. This file
+  renders four categories — Bonus, Unlimited, Play, Limited Rewards —
+  which together exercise every Reward Row sub-pattern that appears in
+  the source (tiered reward tiles, progress-bar rows, countdown-chip
+  rows, hint banner). This is a deliberate truncation of the full
+  category stack so the reference stays readable. Confirm the current
+  live structure against this and add a follow-up pass if the category
+  set has changed.
+
+  NOTES
+  -----
+  - Poppins loaded with system-font fallbacks.
+  - No JavaScript. No interactions. No state variants.
+-->
+
+<style>
+  /* ================================================================
+     :ROOT — Token layer.
+     ================================================================ */
+  :root {
+    /* ---------- Colors ---------- */
+    /* Core — Freecash green */
+    --color-freecash-green-400: #2CFC9E;
+    --color-freecash-green-500: #01D676;
+    --color-freecash-green-500-a10: rgba(1, 214, 118, 0.10);
+
+    /* Core — Grey-Blue */
+    --color-grey-blue-25:  #CCCCDD;
+    --color-grey-blue-50:  #A9A9CA;
+    --color-grey-blue-100: #7D7D9E;
+    --color-grey-blue-200: #525266;
+    --color-grey-blue-300: #33334D;
+    --color-grey-blue-500: #252539;
+    --color-grey-blue-700: #1D1E30;
+    --color-grey-blue-800: #1E1E2E;
+    --color-grey-blue-900: #141523;
+
+    /* Core — Yellow */
+    --color-yellow-400: #FDDD12;
+    --color-yellow-400-a10: rgba(253, 221, 18, 0.10);
+    --color-yellow-500: #ECC206;
+
+    /* Core — Neutrals */
+    --color-neutral-0:       #FFFFFF;
+    --color-neutral-0-a10:   rgba(255, 255, 255, 0.10);
+    --color-neutral-1000:    #000000;
+
+    /* Core — Gold (rewards/tier) */
+    --color-gold-500: #FFE229;
+
+    /* Header chip strokes (same as earn.html) */
+    --chip-stroke-streak:  #7A3F04;
+    --chip-stroke-balance: #0B7546;
+    --chip-stroke-lottery: #6C6E9C;
+    --chip-fill:           #1F222D;
+
+    /* Highlight — Fuschia */
+    --color-highlight-fuschia-300: #F9AEEE;
+    --color-highlight-fuschia-400: #F47EE2;
+    --color-highlight-fuschia-500: #E533C9;
+
+    /* Highlight — Orange */
+    --color-highlight-orange-300: #FFC472;
+    --color-highlight-orange-400: #FD9727;
+    --color-highlight-orange-500: #FC8413;
+    --color-highlight-orange-500-a10: rgba(252, 132, 19, 0.10);
+    --color-highlight-orange-600: #ED6809;
+    --color-highlight-orange-800: #9C3D10;
+
+    /* Highlight — Blue-Ribbon */
+    --color-highlight-blue-ribbon-100: #DDE5FF;
+    --color-highlight-blue-ribbon-400: #7584FF;
+    --color-highlight-blue-ribbon-600: #3E36F5;
+    --color-highlight-blue-ribbon-800: #2B25AE;
+
+    /* Highlight — Purple */
+    --color-highlight-purple-400: #8783D1;
+    --color-highlight-purple-600: #6459A9;
+    --color-highlight-purple-800: #45416E;
+
+    /* Highlight — Grey */
+    --color-highlight-grey-400: #8F929C;
+    --color-highlight-grey-500: #70737B;
+    --color-highlight-grey-500-a10: rgba(112, 115, 123, 0.10);
+
+    /* ---------- LOCAL-ONLY screen colors ---------- */
+    --local-cyan-400:     #00FFDD;
+    --local-cyan-400-a10: rgba(0, 255, 221, 0.10);
+    --local-sky-400:      #7FD9FA;
+    --local-sky-400-a10:  rgba(127, 217, 250, 0.10);
+
+    /* ---------- Spacing ---------- */
+    --spacing-01: 2px;
+    --spacing-02: 4px;
+    --spacing-03: 8px;
+    --spacing-04: 12px;
+    --spacing-05: 16px;
+    --spacing-06: 20px;
+    --spacing-07: 24px;
+    --spacing-08: 32px;
+
+    /* ---------- Radii ---------- */
+    --radius-01: 4px;
+    --radius-02: 8px;
+    --radius-03: 12px;
+    --radius-04: 16px;
+    --radius-05: 20px;
+    --radius-08: 100px;
+
+    /* ---------- Typography ---------- */
+    --font-family-typography:
+      "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+    --font-weight-regular:  400;
+    --font-weight-medium:   500;
+    --font-weight-semibold: 600;
+    --font-weight-bold:     700;
+
+    --font-size-micro: 10px;
+    --font-size-xs:    12px;
+    --font-size-sm:    14px;
+    --font-size-md:    16px;
+    --font-size-lg:    18px;
+    --font-size-xl:    20px;
+    --font-size-2xl:   24px;
+
+    --font-line-height-micro: 14px;
+    --font-line-height-xs:    20px;
+    --font-line-height-sm:    22px;
+    --font-line-height-md:    24px;
+    --font-line-height-xl:    28px;
+
+    /* ---------- V1.1 CANDIDATES (carried from earn.html) ---------- */
+    /* [V1.1 candidate: --color-tab-active-glow] */
+    /* [V1.1 candidate: --blur-header] */
+  }
+
+  /* ================================================================
+     LAYOUT & RESETS
+     ================================================================ */
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    background: var(--color-grey-blue-300);
+    font-family: var(--font-family-typography);
+    color: var(--color-neutral-0);
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+
+  /* Phosphor defaults */
+  .ph, .ph-fill, [class*=" ph-"], [class^="ph-"] {
+    display: inline-block;
+    line-height: 1;
+  }
+
+  .screen {
+    position: relative;
+    width: 390px;
+    height: 2354px;
+    background: var(--color-grey-blue-900);
+    overflow: hidden;
+    font-size: var(--font-size-sm);
+    line-height: var(--font-line-height-sm);
+  }
+
+  /* ================================================================
+     HEADER
+     ================================================================ */
+  .screen__header {
+    position: absolute;
+    top: 0; left: 0;
+    width: 390px;
+    height: 108px;
+    z-index: 10;
+    background: rgba(29, 30, 48, 0.7);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+
+  .status-bar {
+    position: absolute;
+    top: 0; left: 0;
+    width: 390px;
+    height: 44px;
+    background: var(--color-grey-blue-700);
+    color: var(--color-neutral-0);
+  }
+  .status-bar__time {
+    position: absolute;
+    top: 16px; left: 33px;
+    font-weight: var(--font-weight-semibold);
+    font-size: 16px;
+    line-height: 20px;
+  }
+  .status-bar__right {
+    position: absolute;
+    top: 16px; right: 31px;
+    display: flex; align-items: center;
+    gap: 5px;
+  }
+  .status-bar__right svg { display: block; }
+
+  .header-balance {
+    position: absolute;
+    top: 44px; left: 0;
+    width: 390px;
+    height: 64px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-chips {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-03);
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-03);
+    background: var(--color-grey-blue-800);
+    border: 1px solid var(--color-neutral-0-a10);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-family-typography);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-xl);
+    line-height: var(--font-line-height-xl);
+    color: var(--color-neutral-0);
+  }
+
+  .header-chip {
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 0 14px;
+    border: 1px solid;
+    border-radius: var(--radius-03);
+    background: var(--chip-fill);
+    color: var(--color-neutral-0);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-sm);
+    line-height: 22px;
+  }
+  .header-chip[data-variant="Streak container"] {
+    border-color: var(--chip-stroke-streak);
+    box-shadow: 0 2px 0 0 var(--chip-stroke-streak);
+  }
+  .header-chip[data-variant="Balance container"] {
+    border-color: var(--chip-stroke-balance);
+    box-shadow: 0 2px 0 0 var(--chip-stroke-balance);
+    gap: 0;
+  }
+  .header-chip[data-variant="Lottery Container"] {
+    border-color: var(--chip-stroke-lottery);
+    box-shadow: 0 2px 0 0 var(--chip-stroke-lottery);
+  }
+  .header-chip__icon { display: inline-flex; align-items: center; font-size: 16px; }
+  .header-chip__currency { color: var(--color-freecash-green-500); }
+
+  /* Bell — custom Freecash glyph (inline SVG), NOT Phosphor. */
+  .bell {
+    width: 22px; height: 22px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--color-freecash-green-500);
+    flex-shrink: 0;
+  }
+  .bell svg { display: block; }
+
+  /* ================================================================
+     BODY
+     ================================================================ */
+  .body {
+    position: absolute;
+    top: 108px; left: 0;
+    width: 390px;
+    height: 2151px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ================================================================
+     HORIZONTAL MENU — scrollable horizontally.
+     Figma: 5 pills, last 3 extend past the 390px viewport edge. The
+     row is a real horizontal scroll container per layouts.md §7.
+     Scrollbars hidden for the visual reference.
+     ================================================================ */
+  .horizontal-menu {
+    position: relative;
+    width: 390px;
+    height: 56px;
+    padding: var(--spacing-06) var(--spacing-05) 0;
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-05);
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+    /* Hide scrollbars */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/old Edge */
+  }
+  .horizontal-menu::-webkit-scrollbar {
+    display: none; /* WebKit */
+  }
+
+  .tab-primary {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    padding: 10px 16px;
+    border: 1px solid;
+    border-radius: var(--radius-08);
+    background: transparent;
+    font-family: var(--font-family-typography);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-sm);
+    line-height: 16px;
+    cursor: pointer;
+  }
+  .tab-primary[data-status="default"] {
+    border-color: var(--color-neutral-0-a10);
+    color: var(--color-neutral-0);
+  }
+  .tab-primary[data-status="selected"] {
+    background: var(--color-freecash-green-500-a10);
+    border-color: var(--color-freecash-green-500-a10);
+    color: var(--color-freecash-green-400);
+  }
+
+  /* ================================================================
+     BUBBLES
+     ================================================================ */
+  .bubbles {
+    position: relative;
+    width: 390px;
+    height: 132px;
+    padding: var(--spacing-06) var(--spacing-05);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-05);
+    overflow: visible;
+  }
+  .pip {
+    position: relative;
+    flex: 0 0 auto;
+    width: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-03);
+    text-decoration: none;
+    color: inherit;
+  }
+  .pip__image {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    border-radius: var(--radius-03);
+    overflow: hidden;
+    background: var(--color-grey-blue-800);
+  }
+  .pip:nth-child(3n+1) .pip__image {
+    background:
+      radial-gradient(
+        ellipse 110% 90% at 50% 45%,
+        var(--color-highlight-purple-400) 0%,
+        var(--color-highlight-purple-600) 60%,
+        var(--color-highlight-purple-800) 100%
+      );
+  }
+  .pip:nth-child(3n+2) .pip__image {
+    background:
+      radial-gradient(
+        ellipse 110% 90% at 50% 45%,
+        var(--color-highlight-blue-ribbon-400) 0%,
+        var(--color-highlight-blue-ribbon-600) 60%,
+        var(--color-highlight-blue-ribbon-800) 100%
+      );
+  }
+  .pip:nth-child(3n+3) .pip__image {
+    background:
+      radial-gradient(
+        ellipse 110% 90% at 50% 45%,
+        var(--color-highlight-orange-400) 0%,
+        var(--color-highlight-orange-600) 60%,
+        var(--color-highlight-orange-800) 100%
+      );
+  }
+  /* Sparkle placeholder — CSS-only, NOT a Phosphor icon. */
+  .pip__image::before {
+    content: "";
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 32px; height: 32px;
+    -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 5 L58 42 L95 50 L58 58 L50 95 L42 58 L5 50 L42 42 Z' fill='white'/></svg>");
+            mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 5 L58 42 L95 50 L58 58 L50 95 L42 58 L5 50 L42 42 Z' fill='white'/></svg>");
+    -webkit-mask-size: contain;
+            mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+    background-color: rgba(255, 255, 255, 0.22);
+    pointer-events: none;
+  }
+  .pip[data-state="inactive"] .pip__image { opacity: 0.30; }
+
+  .pip__ring {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 76px;
+    height: 76px;
+    margin-top: -3px;
+    border: 1px solid var(--color-freecash-green-500);
+    border-radius: var(--radius-03);
+    pointer-events: none;
+  }
+  .pip__label {
+    font-family: var(--font-family-typography);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-micro);
+    line-height: var(--font-line-height-micro);
+    color: var(--color-neutral-0);
+    text-align: center;
+    text-decoration: none;
+    width: 70px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0;
+  }
+  .pip[data-state="inactive"] .pip__label {
+    color: var(--color-grey-blue-100);
+  }
+
+  /* ================================================================
+     OFFER DETAILS
+     ================================================================ */
+  .offer-details {
+    width: 390px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .active-offer-header {
+    width: 390px;
+    padding: var(--spacing-05);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-05);
+  }
+  .active-offer-header__image {
+    position: relative;
+    flex: 0 0 auto;
+    width: 56px;
+    height: 56px;
+    border-radius: var(--radius-02);
+    overflow: hidden;
+    background:
+      radial-gradient(
+        ellipse 110% 90% at 50% 45%,
+        var(--color-highlight-purple-400) 0%,
+        var(--color-highlight-purple-600) 60%,
+        var(--color-highlight-purple-800) 100%
+      );
+  }
+  .active-offer-header__image::before {
+    content: "";
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 26px; height: 26px;
+    -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 5 L58 42 L95 50 L58 58 L50 95 L42 58 L5 50 L42 42 Z' fill='white'/></svg>");
+            mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 5 L58 42 L95 50 L58 58 L50 95 L42 58 L5 50 L42 42 Z' fill='white'/></svg>");
+    -webkit-mask-size: contain;
+            mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+    background-color: rgba(255, 255, 255, 0.22);
+    pointer-events: none;
+  }
+  .active-offer-header__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .active-offer-header__title {
+    font-family: var(--font-family-typography);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-sm);
+    line-height: 20px;
+    color: var(--color-grey-blue-25);
+    margin: 0;
+  }
+  .active-offer-header__reward {
+    font-family: var(--font-family-typography);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-2xl);
+    line-height: var(--font-line-height-xl);
+    letter-spacing: -0.16px;
+    color: var(--color-freecash-green-500);
+    margin: 0;
+  }
+  .active-offer-header__cta {
+    flex: 0 0 auto;
+    width: 48px;
+    height: 48px;
+    border: 0;
+    border-radius: var(--radius-08);
+    background: var(--color-freecash-green-500);
+    color: var(--color-neutral-1000);
+    font-size: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+
+  /* Sub-tab bar — text-only labels with underline indicator. No icons. */
+  .sub-tabs {
+    width: 390px;
+    padding: 0 var(--spacing-05);
+    display: flex;
+    align-items: flex-start;
+    gap: 40px;
+    margin-top: var(--spacing-04);
+  }
+  .sub-tab {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-02);
+    cursor: pointer;
+    background: transparent;
+    border: 0;
+    padding: 0;
+  }
+  .sub-tab__label {
+    font-family: var(--font-family-typography);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-sm);
+    line-height: 16px;
+    text-align: left;
+    white-space: nowrap;
+  }
+  .sub-tab__indicator {
+    width: 100%;
+    height: 2px;
+    background: transparent;
+    border-radius: 2px;
+  }
+  .sub-tab[data-status="selected"] .sub-tab__label {
+    color: var(--color-freecash-green-400);
+  }
+  .sub-tab[data-status="selected"] .sub-tab__indicator {
+    background: var(--color-freecash-green-400);
+  }
+  .sub-tab[data-status="default"] .sub-tab__label {
+    color: var(--color-neutral-0);
+  }
+
+  /* ================================================================
+     REWARD-CATEGORY SECTIONS
+     ================================================================ */
+  .category-section {
+    padding: var(--spacing-04) var(--spacing-05);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-03);
+  }
+  .category-section__title {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-03);
+    height: 22px;
+  }
+  .category-section__title-icon {
+    width: 20px;
+    height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .category-section__title-text {
+    flex: 1;
+    font-family: var(--font-family-typography);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-sm);
+    line-height: 22px;
+    color: var(--color-neutral-0);
+    margin: 0;
+  }
+  .category-section__info {
+    width: 16px;
+    height: 16px;
+    color: var(--color-grey-blue-25);
+    font-size: 16px;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .reward-tile {
+    flex: 0 0 60px;
+    height: 24px;
+    padding: 2px 8px;
+    border-radius: var(--radius-01);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-family-typography);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-xs);
+    line-height: 20px;
+  }
+
+  .reward-row {
+    width: 100%;
+    background: var(--color-grey-blue-500);
+    border: 0.5px solid var(--color-neutral-0-a10);
+    border-radius: var(--radius-02);
+    padding: var(--spacing-03);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-03);
+    min-height: 40px;
+  }
+  .reward-row__desc {
+    flex: 1;
+    font-family: var(--font-family-typography);
+    font-weight: var(--font-weight-regular);
+    font-size: var(--font-size-xs);
+    line-height: 20px;
+    color: var(--color-neutral-0);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    margin: 0;
+  }
+  .reward-row__progress-count {
+    font-family: var(--font-family-typography);
+    font-weight: var(--font-weight-regular);
+    font-size: var(--font-size-xs);
+    line-height: 20px;
+    color: var(--color-neutral-0);
+    flex-shrink: 0;
+  }
+
+  .reward-row--stacked {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--spacing-03);
+  }
+  .reward-row__content {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-03);
+    width: 100%;
+  }
+
+  .reward-row__progress {
+    width: 100%;
+    height: 4px;
+    border-radius: var(--radius-08);
+    overflow: hidden;
+  }
+  .reward-row__progress-fill {
+    height: 100%;
+    border-radius: var(--radius-08);
+  }
+
+  .countdown-chip {
+    flex: 0 0 auto;
+    height: 24px;
+    padding: 2px 4px;
+    background: var(--color-grey-blue-900);
+    border-radius: var(--radius-01);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-02);
+    font-family: var(--font-family-typography);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-xs);
+    line-height: 20px;
+    color: var(--color-grey-blue-25);
+  }
+  .countdown-chip i { font-size: 12px; color: var(--color-grey-blue-50); }
+
+  /* Accent variants */
+  .category-section[data-accent="gold"] .reward-tile {
+    background: var(--color-yellow-400-a10);
+    color: var(--color-yellow-400);
+  }
+  .category-section[data-accent="gold"] .reward-row__progress {
+    background: var(--color-yellow-400-a10);
+  }
+  .category-section[data-accent="gold"] .reward-row__progress-fill {
+    background: var(--color-yellow-400);
+  }
+
+  .category-section[data-accent="cyan"] .reward-tile {
+    background: var(--local-cyan-400-a10);
+    color: var(--local-cyan-400);
+  }
+  .category-section[data-accent="cyan"] .reward-row__progress {
+    background: var(--local-cyan-400-a10);
+  }
+  .category-section[data-accent="cyan"] .reward-row__progress-fill {
+    background: var(--local-cyan-400);
+  }
+
+  .category-section[data-accent="fuschia"] .reward-tile {
+    background: rgba(229, 51, 201, 0.10);
+    color: var(--color-highlight-fuschia-300);
+  }
+
+  .category-section[data-accent="orange"] .reward-tile {
+    background: var(--color-highlight-orange-500-a10);
+    color: var(--color-highlight-orange-300);
+  }
+
+  .category-section[data-accent="sky"] .reward-tile {
+    background: var(--local-sky-400-a10);
+    color: var(--local-sky-400);
+  }
+  .category-section[data-accent="sky"] .reward-row__progress {
+    background: var(--local-sky-400-a10);
+  }
+  .category-section[data-accent="sky"] .reward-row__progress-fill {
+    background: var(--local-sky-400);
+  }
+
+  .category-section[data-accent="muted"] .reward-tile {
+    background: var(--color-highlight-grey-500-a10);
+    color: var(--color-highlight-grey-400);
+  }
+  .category-section[data-accent="muted"] .reward-row__desc {
+    color: var(--color-highlight-grey-400);
+  }
+
+  /* Tier ladder */
+  .reward-tier-row {
+    display: flex;
+    gap: var(--spacing-03);
+    width: 100%;
+  }
+  .reward-tier {
+    flex: 1;
+    height: 40px;
+    background: var(--color-grey-blue-500);
+    border-radius: var(--radius-02);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-grey-blue-25);
+    font-size: 16px;
+  }
+  .reward-tier[data-emphasis="primary"] {
+    border: 1px solid var(--color-gold-500);
+    color: var(--color-gold-500);
+  }
+  .reward-tier[data-emphasis="locked"] {
+    opacity: 0.85;
+  }
+
+  /* Hint banner */
+  .hint-banner {
+    width: 100%;
+    padding: var(--spacing-03);
+    background: var(--color-yellow-400-a10);
+    border: 1px solid var(--color-yellow-400-a10);
+    border-radius: var(--radius-02);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-04);
+  }
+  .hint-banner__icon {
+    flex-shrink: 0;
+    width: 20px; height: 20px;
+    color: var(--color-yellow-400);
+    font-size: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .hint-banner__text {
+    font-family: var(--font-family-typography);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-xs);
+    line-height: 20px;
+    color: var(--color-neutral-0);
+    margin: 0;
+  }
+
+  /* ================================================================
+     BOTTOM TABBAR — tab icons stay inline SVG per layouts.md.
+     ================================================================ */
+  .tabbar {
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 390px;
+    height: 94px;
+    background: var(--color-grey-blue-700);
+    z-index: 10;
+  }
+  .tabbar__row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    height: 73px;
+  }
+  .tabbar__tab {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-02);
+    padding: 15.5px 0;
+    color: var(--color-grey-blue-100);
+    text-decoration: none;
+  }
+  .tabbar__tab[aria-current="page"] { color: var(--color-freecash-green-500); }
+  .tabbar__tab[aria-current="page"] .tabbar__label { color: var(--color-neutral-0); }
+  .tabbar__tab[aria-current="page"]::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 26px;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--color-freecash-green-500);
+    opacity: 0.20;
+    filter: blur(16px);
+    pointer-events: none;
+  }
+  .tabbar__icon {
+    position: relative;
+    z-index: 1;
+    width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .tabbar__icon svg { display: block; }
+  .tabbar__label {
+    position: relative;
+    z-index: 1;
+    font-family: var(--font-family-typography);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-micro);
+    line-height: var(--font-line-height-micro);
+    letter-spacing: 0;
+  }
+  .tabbar__home-indicator {
+    height: 21px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .tabbar__home-indicator-bar {
+    width: 139px;
+    height: 5px;
+    background: var(--color-neutral-0);
+    border-radius: var(--radius-08);
+  }
+</style>
+</head>
+
+<body>
+  <main class="screen" aria-label="Freecash — My Offers screen">
+
+    <!-- ============================================================
+         HEADER
+         ============================================================ -->
+    <header class="screen__header" data-region="Header">
+
+      <!-- Status Bar — iOS chrome, inline SVG (not UI icons) -->
+      <div class="status-bar" aria-hidden="true">
+        <span class="status-bar__time">9:41</span>
+        <span class="status-bar__right">
+          <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor">
+            <rect x="0"  y="7" width="3" height="4" rx="0.5"/>
+            <rect x="5"  y="5" width="3" height="6" rx="0.5"/>
+            <rect x="10" y="2" width="3" height="9" rx="0.5"/>
+            <rect x="15" y="0" width="3" height="11" rx="0.5"/>
+          </svg>
+          <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor">
+            <path d="M8 0C4.7 0 1.7 1.3-.5 3.4l1.4 1.4C2.7 3 5.2 1.9 8 1.9s5.3 1.1 7.1 2.9l1.4-1.4C14.3 1.3 11.3 0 8 0zM3 5.7l1.4 1.4A5.2 5.2 0 018 5.7c1.4 0 2.7.5 3.6 1.4L13 5.7a7.2 7.2 0 00-10 0zM5.5 8.2l2.5 2.5 2.5-2.5A3.5 3.5 0 008 7.2a3.5 3.5 0 00-2.5 1z"/>
+          </svg>
+          <svg width="25" height="11" viewBox="0 0 25 11" fill="none">
+            <rect x="0.5" y="0.5" width="21" height="10" rx="2.5" stroke="currentColor" stroke-opacity="0.35"/>
+            <rect x="2"   y="2"   width="18" height="7" rx="1.5" fill="currentColor"/>
+            <rect x="22.5" y="3.5" width="1.5" height="4" rx="0.5" fill="currentColor" fill-opacity="0.4"/>
+          </svg>
+        </span>
+      </div>
+
+      <div class="header-balance" data-region="Header balance">
+
+        <div class="avatar" aria-label="User J">J</div>
+
+        <div class="header-chips" role="group" aria-label="Header balance chips">
+
+          <span class="header-chip" data-component="Header component" data-variant="Streak container">
+            <span class="header-chip__icon" style="color: var(--color-highlight-orange-500);" aria-hidden="true">
+              <i class="ph-fill ph-flame"></i>
+            </span>
+            <span>7</span>
+          </span>
+
+          <span class="header-chip" data-component="Header component" data-variant="Balance container">
+            <span><span class="header-chip__currency">$</span>0.00</span>
+          </span>
+
+          <span class="header-chip" data-component="Header component" data-variant="Lottery Container">
+            <span class="header-chip__icon" style="color: var(--color-highlight-blue-ribbon-100);" aria-hidden="true">
+              <i class="ph-fill ph-ticket"></i>
+            </span>
+            <span>23k</span>
+          </span>
+        </div>
+
+        <!-- Bell — custom Freecash glyph (inline SVG), NOT Phosphor. -->
+        <span class="bell" aria-label="Notifications, 1 new">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2.5a6 6 0 00-6 6v3.2c0 .6-.2 1.2-.6 1.7L4 15.4V17h16v-1.6l-1.4-2c-.4-.5-.6-1.1-.6-1.7V8.5a6 6 0 00-6-6z" opacity="0.95"/>
+            <path d="M10.3 19a2 2 0 003.4 0H10.3z" opacity="0.6"/>
+            <circle cx="18" cy="6" r="3.5" fill="var(--color-grey-blue-700)"/>
+            <circle cx="18" cy="6" r="2.5" fill="currentColor"/>
+          </svg>
+        </span>
+      </div>
+
+    </header>
+
+    <!-- ============================================================
+         BODY
+         ============================================================ -->
+    <div class="body" data-region="Body">
+
+      <!-- 1. HORIZONTAL MENU — scrollable horizontally -->
+      <nav class="horizontal-menu" data-pattern="Horizontal Menu" role="tablist" aria-label="Offer categories">
+        <button class="tab-primary" role="tab" aria-selected="true"
+                data-component="tab_primary" data-status="selected" data-size="sm">Earn</button>
+        <button class="tab-primary" role="tab" aria-selected="false"
+                data-component="tab_primary" data-status="default" data-size="sm">Cashback</button>
+        <button class="tab-primary" role="tab" aria-selected="false"
+                data-component="tab_primary" data-status="default" data-size="sm">Surveys</button>
+        <button class="tab-primary" role="tab" aria-selected="false"
+                data-component="tab_primary" data-status="default" data-size="sm">Rewards</button>
+        <button class="tab-primary" role="tab" aria-selected="false"
+                data-component="tab_primary" data-status="default" data-size="sm">Referrals</button>
+      </nav>
+
+      <!-- 2. BUBBLES -->
+      <section class="bubbles" data-pattern="Bubbles" aria-label="Active offers">
+
+        <a href="#" class="pip" data-state="active">
+          <div class="pip__image" aria-hidden="true"></div>
+          <div class="pip__ring" aria-hidden="true"></div>
+          <p class="pip__label">Monopoly Go!</p>
+        </a>
+
+        <a href="#" class="pip" data-state="inactive">
+          <div class="pip__image" aria-hidden="true"></div>
+          <div class="pip__ring" aria-hidden="true"></div>
+          <p class="pip__label">Board of Kings</p>
+        </a>
+
+        <a href="#" class="pip" data-state="inactive">
+          <div class="pip__image" aria-hidden="true"></div>
+          <div class="pip__ring" aria-hidden="true"></div>
+          <p class="pip__label">Clash of Clans</p>
+        </a>
+
+        <a href="#" class="pip" data-state="inactive">
+          <div class="pip__image" aria-hidden="true"></div>
+          <div class="pip__ring" aria-hidden="true"></div>
+          <p class="pip__label">Subway Surfer</p>
+        </a>
+
+        <a href="#" class="pip" data-state="inactive">
+          <div class="pip__image" aria-hidden="true"></div>
+          <div class="pip__ring" aria-hidden="true"></div>
+          <p class="pip__label">Wordle</p>
+        </a>
+
+      </section>
+
+      <!-- 3. OFFER DETAILS -->
+      <section class="offer-details" data-region="Offer Details">
+
+        <div class="active-offer-header" data-component="Active Offer Header">
+          <div class="active-offer-header__image" aria-hidden="true"></div>
+          <div class="active-offer-header__body">
+            <p class="active-offer-header__title">Dice Dream</p>
+            <p class="active-offer-header__reward">$125.10</p>
+          </div>
+          <button class="active-offer-header__cta" aria-label="Continue playing">
+            <i class="ph-fill ph-play" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <!-- Sub-tab bar — text-only labels, no icons -->
+        <div class="sub-tabs" data-pattern="Horizontal Menu" data-nested="true" role="tablist">
+          <button class="sub-tab" role="tab" aria-selected="true"
+                  data-component="tab_secondary" data-status="selected">
+            <span class="sub-tab__label">Rewards</span>
+            <span class="sub-tab__indicator" aria-hidden="true"></span>
+          </button>
+          <button class="sub-tab" role="tab" aria-selected="false"
+                  data-component="tab_secondary" data-status="default">
+            <span class="sub-tab__label">Details</span>
+            <span class="sub-tab__indicator" aria-hidden="true"></span>
+          </button>
+        </div>
+
+        <!-- Content -->
+        <div data-region="Content">
+
+          <!-- Bonus Rewards -->
+          <section class="category-section" data-section="Bonus Rewards" data-accent="gold">
+            <header class="category-section__title">
+              <span class="category-section__title-icon" style="color: var(--color-yellow-400);" aria-hidden="true">
+                <i class="ph-fill ph-coins"></i>
+              </span>
+              <h2 class="category-section__title-text">Bonus Rewards</h2>
+              <span class="category-section__info" aria-hidden="true"><i class="ph ph-info"></i></span>
+            </header>
+
+            <div class="reward-tier-row" data-pattern="Reward Tier Row">
+              <div class="reward-tier" data-emphasis="primary" aria-label="Primary reward">
+                <i class="ph-fill ph-gift" aria-hidden="true"></i>
+              </div>
+              <div class="reward-tier" data-emphasis="locked" aria-label="Locked reward">
+                <i class="ph ph-lock" aria-hidden="true"></i>
+              </div>
+              <div class="reward-tier" data-emphasis="locked" aria-label="Locked reward">
+                <i class="ph ph-lock" aria-hidden="true"></i>
+              </div>
+              <div class="reward-tier" data-emphasis="locked" aria-label="Locked reward">
+                <i class="ph ph-lock" aria-hidden="true"></i>
+              </div>
+            </div>
+
+            <div class="reward-row reward-row--stacked" data-component="Reward Row" data-kind="progression">
+              <div class="reward-row__content">
+                <span class="reward-tile">Earn</span>
+                <div class="reward-row__progress" role="progressbar" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100">
+                  <div class="reward-row__progress-fill" style="width: 35%;"></div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Unlimited Rewards -->
+          <section class="category-section" data-section="Unlimited Rewards" data-accent="cyan">
+            <header class="category-section__title">
+              <span class="category-section__title-icon" style="color: var(--color-grey-blue-25);" aria-hidden="true">
+                <i class="ph ph-arrows-clockwise"></i>
+              </span>
+              <h2 class="category-section__title-text">Unlimited Rewards</h2>
+              <span class="category-section__info" aria-hidden="true"><i class="ph ph-info"></i></span>
+            </header>
+
+            <div class="reward-row reward-row--stacked" data-component="Reward Row" data-kind="progress">
+              <div class="reward-row__content">
+                <span class="reward-tile">Earn</span>
+                <p class="reward-row__desc">Every 5 completed chapters</p>
+                <span class="reward-row__progress-count">4 /5</span>
+              </div>
+              <div class="reward-row__progress" role="progressbar" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">
+                <div class="reward-row__progress-fill" style="width: 80%;"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Play Rewards -->
+          <section class="category-section" data-section="Play Rewards" data-accent="cyan">
+            <header class="category-section__title">
+              <span class="category-section__title-icon" style="color: var(--local-cyan-400);" aria-hidden="true">
+                <i class="ph-fill ph-game-controller"></i>
+              </span>
+              <h2 class="category-section__title-text">Play Rewards</h2>
+              <span class="category-section__info" aria-hidden="true"><i class="ph ph-info"></i></span>
+            </header>
+
+            <div class="reward-row reward-row--stacked" data-component="Reward Row" data-kind="progress">
+              <div class="reward-row__content">
+                <span class="reward-tile">Earn</span>
+                <p class="reward-row__desc">Beginner: Keep playing to fill the bar!</p>
+              </div>
+              <div class="reward-row__progress" role="progressbar" aria-valuenow="14" aria-valuemin="0" aria-valuemax="100">
+                <div class="reward-row__progress-fill" style="width: 14%;"></div>
+              </div>
+            </div>
+
+            <div class="reward-row reward-row--stacked" data-component="Reward Row" data-kind="progress">
+              <div class="reward-row__content">
+                <span class="reward-tile">Earn</span>
+                <p class="reward-row__desc">Intermediate: Keep playing to fill the bar!</p>
+              </div>
+              <div class="reward-row__progress" role="progressbar" aria-valuenow="6" aria-valuemin="0" aria-valuemax="100">
+                <div class="reward-row__progress-fill" style="width: 6%;"></div>
+              </div>
+            </div>
+
+            <div class="reward-row reward-row--stacked" data-component="Reward Row" data-kind="progress">
+              <div class="reward-row__content">
+                <span class="reward-tile">Earn</span>
+                <p class="reward-row__desc">Pro: Keep playing to fill the bar!</p>
+              </div>
+              <div class="reward-row__progress" role="progressbar" aria-valuenow="3" aria-valuemin="0" aria-valuemax="100">
+                <div class="reward-row__progress-fill" style="width: 3%;"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Limited Rewards -->
+          <section class="category-section" data-section="Limited Rewards" data-accent="fuschia">
+            <header class="category-section__title">
+              <span class="category-section__title-icon" style="color: var(--color-highlight-fuschia-300);" aria-hidden="true">
+                <i class="ph-fill ph-timer"></i>
+              </span>
+              <h2 class="category-section__title-text">Limited Rewards</h2>
+              <span class="category-section__info" aria-hidden="true"><i class="ph ph-info"></i></span>
+            </header>
+
+            <div class="reward-row" data-component="Reward Row" data-kind="countdown">
+              <span class="reward-tile">$50</span>
+              <p class="reward-row__desc">Reach Board 31 within</p>
+              <span class="countdown-chip">
+                <i class="ph ph-hourglass" aria-hidden="true"></i>
+                <span>4D</span>
+              </span>
+            </div>
+
+            <div class="reward-row" data-component="Reward Row" data-kind="countdown">
+              <span class="reward-tile">$100</span>
+              <p class="reward-row__desc">Reach Board 70 within</p>
+              <span class="countdown-chip">
+                <i class="ph ph-hourglass" aria-hidden="true"></i>
+                <span>9D</span>
+              </span>
+            </div>
+
+            <div class="reward-row" data-component="Reward Row" data-kind="countdown">
+              <span class="reward-tile">$150</span>
+              <p class="reward-row__desc">Reach Board 125 within</p>
+              <span class="countdown-chip">
+                <i class="ph ph-hourglass" aria-hidden="true"></i>
+                <span>19D</span>
+              </span>
+            </div>
+
+            <div class="hint-banner" data-component="Hint Banner">
+              <span class="hint-banner__icon" aria-hidden="true">
+                <i class="ph-fill ph-coins"></i>
+              </span>
+              <p class="hint-banner__text">Tip: Make purchases to reach these rewards!</p>
+            </div>
+          </section>
+
+        </div>
+
+      </section>
+    </div>
+
+    <!-- ============================================================
+         BOTTOM TABBAR — tab glyphs stay inline SVG per layouts.md.
+         ============================================================ -->
+    <nav class="tabbar" data-component="Bottom TabBar" data-item="My Offers" aria-label="Primary">
+      <div class="tabbar__row">
+
+        <a href="#" class="tabbar__tab" data-tab="Earn">
+          <span class="tabbar__icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/>
+            </svg>
+          </span>
+          <span class="tabbar__label">Earn</span>
+        </a>
+
+        <a href="#" class="tabbar__tab" data-tab="Deals">
+          <span class="tabbar__icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
+              <circle cx="7" cy="7" r="1.5" fill="currentColor"/>
+            </svg>
+          </span>
+          <span class="tabbar__label">Deals</span>
+        </a>
+
+        <a href="#" class="tabbar__tab" data-tab="My Offers" aria-current="page">
+          <span class="tabbar__icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 11l3 3 8-8M20 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2h11"/>
+            </svg>
+          </span>
+          <span class="tabbar__label">My Offers</span>
+        </a>
+
+        <a href="#" class="tabbar__tab" data-tab="Cashout">
+          <span class="tabbar__icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 7H3V5a2 2 0 012-2h14a2 2 0 012 2v2z"/>
+              <path d="M21 7v12a2 2 0 01-2 2H5a2 2 0 01-2-2V7h18z"/>
+              <circle cx="17" cy="14" r="1.5" fill="currentColor"/>
+            </svg>
+          </span>
+          <span class="tabbar__label">Cashout</span>
+        </a>
+
+        <a href="#" class="tabbar__tab" data-tab="Quests">
+          <span class="tabbar__icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h4l2 3h10v13H4V4z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+          </span>
+          <span class="tabbar__label">Quests</span>
+        </a>
+
+      </div>
+
+      <div class="tabbar__home-indicator" aria-hidden="true">
+        <div class="tabbar__home-indicator-bar"></div>
+      </div>
+    </nav>
+
+  </main>
+</body>
+</html>

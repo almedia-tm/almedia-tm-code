@@ -1,0 +1,1901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=390, initial-scale=1" />
+<title>Freecash — Earn (V1 reference)</title>
+
+<!--
+  Freecash Design System / examples / earn.html
+  -------------------------------------------------
+  Source frame : Example Screens › Earn  (Figma node 13011:9689)
+  File key     : 72LO7OX0mwAT9uZdNg1vlG
+  Captured     : 2026-04-22
+
+  PURPOSE
+  -------
+  Canonical visual reference. Claude pattern-matches against this file when
+  producing new Freecash screens. Every value is token-bound; every component
+  either maps to components.md or is flagged [V1.1 candidate] inline.
+
+  NOTES
+  -----
+  - Poppins is loaded with system-font fallbacks — file renders correctly
+    even when Poppins is not installed.
+  - All tokens below come from tokens.md. Three values used in the Figma
+    source do not yet have tokens and are flagged inline: tab active glow,
+    a 10px Header-balance item gap, and background blur.
+  - No JavaScript. No interactions. No state variants.
+-->
+
+<style>
+  /* ================================================================
+     :ROOT — Token layer. Every value below resolves to tokens.md.
+     ================================================================ */
+  :root {
+    /* ---------- Colors ---------- */
+    /* Core — Freecash green (brand anchor) */
+    --color-freecash-green-400: #2CFC9E;
+    --color-freecash-green-500: #01D676;
+
+    /* Core — Grey-Blue (neutrals, cool cast) */
+    --color-grey-blue-25:  #CCCCDD;
+    --color-grey-blue-50:  #A9A9CA;
+    --color-grey-blue-100: #7D7D9E;  /* bottom-nav inactive text & icon */
+    --color-grey-blue-200: #525266;
+    --color-grey-blue-300: #33334D;
+    --color-grey-blue-500: #252539;  /* CashoutProgress track */
+    --color-grey-blue-700: #1D1E30;  /* Header/TabBar surface */
+    --color-grey-blue-800: #1E1E2E;  /* Avatar tile */
+    --color-grey-blue-900: #141523;  /* page background */
+
+    /* Core — Yellow (rewards & hero CTA — the dominant "value" color on cards) */
+    --color-yellow-400: #FDDD12;
+    --color-yellow-500: #ECC206;
+
+    /* Core — Neutrals */
+    --color-neutral-0:       #FFFFFF;
+    --color-neutral-0-a10:   #FFFFFF1A;  /* 10% white — avatar stroke */
+    --color-neutral-1000:    #000000;
+    --color-neutral-1000-a70:#000000B2;  /* 70% black — card overlays */
+
+    /* Core — Gold (rewards/tier) */
+    --color-gold-500: #FFE229;
+    --color-gold-600: #B39A1E;  /* used for button_special drop shadow */
+
+    /* Header chip strokes (NOT in tokens.md — captured from Figma directly).
+       Each chip uses a darkened brand color matching its accent icon, plus
+       a hard-edge drop shadow in the same color for the "raised pill" look. */
+    --chip-stroke-streak:  #7A3F04;  /* dark orange */
+    --chip-stroke-balance: #0B7546;  /* dark green */
+    --chip-stroke-lottery: #6C6E9C;  /* muted lavender */
+    --chip-fill:           #1F222D;  /* slightly different from grey-blue-800; used by all 3 chips */
+
+    /* Highlight palette — used for Survey thumbnail tiles and as brand-tint
+       placeholder colors in the empty card art slots. Sourced from tokens.md
+       §1.8 (orange), §1.10 (blue-ribbon), §1.11 (purple). */
+    --color-highlight-fuschia-500:     #E533C9;
+    --color-highlight-fuschia-400:     #F47EE2;
+
+    --color-highlight-blue-ribbon-400: #7584FF;
+    --color-highlight-blue-ribbon-500: #555BFF;
+    --color-highlight-blue-ribbon-600: #3E36F5;
+    --color-highlight-blue-ribbon-700: #352AD8;
+    --color-highlight-blue-ribbon-800: #2B25AE;
+    --color-highlight-blue-ribbon-100: #DDE5FF;
+
+    --color-highlight-orange-400:      #FD9727;
+    --color-highlight-orange-500:      #FC8413;
+    --color-highlight-orange-600:      #ED6809;
+    --color-highlight-orange-700:      #C44E0A;
+    --color-highlight-orange-800:      #9C3D10;
+
+    --color-highlight-purple-400:      #8783D1;
+    --color-highlight-purple-500:      #7469C2;
+    --color-highlight-purple-600:      #6459A9;
+    --color-highlight-purple-700:      #524A8A;
+    --color-highlight-purple-800:      #45416E;
+
+    /* ---------- Spacing (from tokens.md §3) ---------- */
+    --spacing-01: 2px;
+    --spacing-02: 4px;
+    --spacing-03: 8px;
+    --spacing-04: 12px;
+    --spacing-05: 16px;
+    --spacing-06: 20px;
+    --spacing-07: 24px;
+    --spacing-08: 32px;
+
+    /* ---------- Radii (from tokens.md §4) ---------- */
+    --radius-01: 4px;
+    --radius-02: 8px;
+    --radius-03: 12px;
+    --radius-04: 16px;
+    --radius-05: 20px;
+    --radius-08: 100px; /* pill */
+
+    /* ---------- Typography (from tokens.md §2, mobile mode) ---------- */
+    --font-family-typography:
+      "Poppins", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+
+    --font-weight-regular:  400;
+    --font-weight-medium:   500;
+    --font-weight-semibold: 600;
+    --font-weight-bold:     700;
+
+    --font-size-micro: 10px;
+    --font-size-xs:    12px;
+    --font-size-sm:    14px;
+    --font-size-md:    16px;
+    --font-size-lg:    18px;
+    --font-size-xl:    20px;
+    --font-size-2xl:   24px;
+
+    --font-line-height-micro: 14px;
+    --font-line-height-xs:    20px;
+    --font-line-height-sm:    22px;
+    --font-line-height-md:    24px;
+    --font-line-height-xl:    28px;
+
+    /* ---------- V1.1 CANDIDATES — tokens used in Figma but not yet in tokens.md ---------- */
+
+    /* [V1.1 candidate: --color-tab-active-glow]
+       60x26 ellipse behind the active tab icon, green @ 20%, Layer Blur 41.
+       Currently: --color-freecash-green-500 at 20% opacity + filter blur(41px) */
+
+    /* [V1.1 candidate: --blur-header]
+       tokens.md §5 notes shadow/elevation/blur tokens are missing. Header
+       and Header-balance both use a progressive background-blur radius 100.
+       Using a literal backdrop-filter with this flag. */
+  }
+
+  /* ================================================================
+     LAYOUT & RESETS
+     ================================================================ */
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+
+  body {
+    background: var(--color-grey-blue-300); /* canvas mat — outside the 390px device */
+    font-family: var(--font-family-typography);
+    color: var(--color-neutral-0);
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+
+  /* Device frame: full 2563px scroll height as captured (no viewport clip).
+     This is a VISUAL REFERENCE, not a scrollable viewport. */
+  .screen {
+    position: relative;
+    width: 390px;
+    height: 2563px;
+    background: var(--color-grey-blue-900);
+    overflow: hidden;
+    font-size: var(--font-size-sm);
+    line-height: var(--font-line-height-sm);
+  }
+
+  /* ================================================================
+     HEADER — fixed region, 108px
+       108 = 44 Status Bar + 64 Header balance
+     Figma: 13011:9907 — fill rgba(29,30,48,0.7) + progressive blur r=100
+     ================================================================ */
+  .screen__header {
+    position: absolute;
+    top: 0; left: 0;
+    width: 390px;
+    height: 108px;
+    z-index: 10;
+    background: rgba(29, 30, 48, 0.7); /* var(--color-grey-blue-700) at 70% */
+    /* [V1.1 candidate: --blur-header] */
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+  }
+
+  /* -- Status Bar: iOS portrait, 390x44 -- */
+  /* [V1.1 candidate for components.md — "Status Bar" is a library component
+     (Figma id 13001:378) not yet documented. Inline for this reference. */
+  .status-bar {
+    position: absolute;
+    top: 0; left: 0;
+    width: 390px;
+    height: 44px;
+    background: var(--color-grey-blue-700);
+    color: var(--color-neutral-0);
+  }
+  .status-bar__time {
+    position: absolute;
+    top: 16px; left: 33px;
+    font-weight: var(--font-weight-semibold);
+    font-size: 16px;
+    line-height: 20px;
+  }
+  .status-bar__right {
+    position: absolute;
+    top: 16px; right: 31px;
+    display: flex; align-items: center;
+    gap: 5px;
+  }
+  .status-bar__right svg { display: block; }
+
+  /* -- Header balance: 390x64, padding 12/16/12/16 --
+     Three-region layout: avatar (left) | chips group (centered) | bell (right).
+     space-between pushes avatar and bell to the edges; the chips wrapper
+     centers itself in the remaining space because it has no flex-grow and
+     equal margin distribution. */
+  .header-balance {
+    position: absolute;
+    top: 44px; left: 0;
+    width: 390px;
+    height: 64px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  /* The chips group hugs its content (no flex-grow). It sits between the
+     two SPACE_BETWEEN siblings (avatar and bell), which gives it visually
+     centered alignment in the leftover space. */
+  .header-chips {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-03); /* 8 */
+  }
+
+  /* Avatar (J tile) — 40x40, radius 12, bg grey-blue-800, white-10% stroke */
+  /* [V1.1 candidate: "User Avatar" component (initial glyph 20/bold/28lh)] */
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-03);
+    background: var(--color-grey-blue-800);
+    border: 1px solid var(--color-neutral-0-a10);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-family-typography);
+    font-weight: var(--font-weight-bold);
+    font-size: var(--font-size-xl); /* 20 */
+    line-height: var(--font-line-height-xl); /* 28 */
+    color: var(--color-neutral-0);
+  }
+
+  /* Header component chip — "Top Navigation — Header component" in components.md.
+     Each chip is a 38px-tall pill with:
+       - fill: #1F222D
+       - 1px stroke in the chip's accent color (orange / green / lavender)
+       - hard-edge drop shadow (0, 2) radius 0 in the same accent color (the "raised pill" look)
+       - radius 12, padding 8/14/8/14
+       - text Poppins Medium 14 / 22, gap 2px between icon and value
+     The drop shadow color matches the stroke — NOT a token in tokens.md, captured from Figma. */
+  .header-chip {
+    height: 38px;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 0 14px;
+    border: 1px solid;
+    border-radius: var(--radius-03); /* 12 */
+    background: var(--chip-fill);
+    color: var(--color-neutral-0);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-sm); /* 14 */
+    line-height: 22px;
+  }
+  .header-chip[data-variant="Streak container"] {
+    border-color: var(--chip-stroke-streak);
+    box-shadow: 0 2px 0 0 var(--chip-stroke-streak);
+  }
+  .header-chip[data-variant="Balance container"] {
+    border-color: var(--chip-stroke-balance);
+    box-shadow: 0 2px 0 0 var(--chip-stroke-balance);
+    gap: 0; /* the $ sign is part of the text, not a separate icon */
+    padding: 0 14px;
+  }
+  .header-chip[data-variant="Lottery Container"] {
+    border-color: var(--chip-stroke-lottery);
+    box-shadow: 0 2px 0 0 var(--chip-stroke-lottery);
+  }
+  .header-chip__icon { display: inline-flex; align-items: center; }
+  .header-chip__icon svg { display: block; }
+  .header-chip__currency {
+    /* The "$" character is rendered in green even though it's part of the price text */
+    color: var(--color-freecash-green-500);
+  }
+
+  /* Bell — green filled, with a notification dot. The dot is a circle
+     of brand green sitting on a "punched" circle in the header bg color
+     so it reads cleanly against the bell shape. */
+  .bell {
+    width: 22px; height: 22px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--color-freecash-green-500);
+    flex-shrink: 0;
+  }
+  .bell svg { display: block; }
+
+  /* ================================================================
+     BODY — scrolling region, 2334px of content
+     Figma: 13011:9690 — VERTICAL auto-layout,
+       paddingTop = 20 (spacing-06), itemSpacing = 24 (spacing-07)
+     ================================================================ */
+  .body {
+    position: absolute;
+    top: 108px; left: 0;
+    width: 390px;
+    height: 2334px;
+    padding-top: var(--spacing-06); /* 20 */
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-07); /* 24 */
+  }
+
+  /* ---------- CashoutProgress ----------
+     Figma 13011:9691 — sticky hero (49px). Title + full-width pill with
+     progress fill + overlaid centered amount.
+     [V1.1 candidate for components.md — "Cashout Progress"] */
+  .cashout-progress {
+    padding: 0 var(--spacing-05); /* 16 horizontal */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-03); /* 8 */
+  }
+  .cashout-progress__title {
+    font-size: var(--font-size-sm);   /* 14 */
+    line-height: var(--font-line-height-sm); /* 22 */
+    font-weight: var(--font-weight-regular);
+    color: var(--color-neutral-0);
+    margin: 0;
+  }
+  .cashout-progress__bar {
+    position: relative;
+    width: 100%;
+    height: 20px;
+    border-radius: var(--radius-08); /* 100 pill */
+    background: var(--color-grey-blue-500);
+    overflow: hidden;
+  }
+  .cashout-progress__fill {
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    /* 25% fill — Figma measured 89.5 / 358px inner track */
+    width: 25%;
+    background: var(--color-freecash-green-500);
+    border-radius: var(--radius-08);
+  }
+  .cashout-progress__amount {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--font-size-xs); /* 12 */
+    line-height: var(--font-line-height-xs); /* 20 */
+    font-weight: var(--font-weight-regular);
+    color: var(--color-neutral-0);
+  }
+
+  /* ---------- Section Headline (repeats per body section) ----------
+     Figma: "Title" frames 13011:969{7,4,9,4,9,9}
+     Icon + title on the left, "View all ›" CTA on the right (optional).
+     [V1.1 candidate for components.md — "Section Headline"] */
+  .section {
+    padding: 0 var(--spacing-05); /* 16 horizontal */
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-05); /* 16 between title and row */
+  }
+  .section__title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 24px;
+  }
+  .section__title-left {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-03); /* 8 */
+  }
+  .section__title-icon {
+    width: 20px; height: 20px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+  .section__title-icon svg { display: block; }
+  .section__title-text {
+    font-family: var(--font-family-typography);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-md); /* 16 */
+    line-height: var(--font-line-height-md); /* 24 */
+    color: var(--color-neutral-0);
+    margin: 0;
+  }
+  .section__title-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-02); /* 4 */
+    font-size: var(--font-size-xs); /* 12 */
+    line-height: var(--font-line-height-xs); /* 20 */
+    font-weight: var(--font-weight-medium);
+    color: var(--color-grey-blue-50);
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .section__title-cta svg { display: block; }
+
+  /* ---------- Section row — horizontal carousel ----------
+     IMPORTANT: We use 'visible' so the 1px gold/orange OUTSIDE strokes
+     on Highest/High emphasis cards are not clipped by the row container.
+     A real product would use overflow-x: auto for horizontal scroll, but
+     this static reference shows all cards in a wrapped grid. */
+  .row {
+    display: flex;
+    gap: var(--spacing-04); /* 12 */
+    overflow: visible;
+  }
+
+  /* ================================================================
+     OFFER CARD — hero (Size=Medium, Emphasis=Highest)
+     Figma: 13011:9701 — 358×258, cornerRadius 12 (NOT 16),
+     1px OUTSIDE stroke in gold #FFE229.
+     Background is an IMAGE FILL in Figma (game-art raster) — kept as a
+     placeholder gradient since rasters can't be reproduced in CSS.
+     ================================================================ */
+  .offer-card--hero {
+    position: relative;
+    flex: 0 0 auto;
+    width: 358px;
+    height: 258px;
+    border-radius: var(--radius-03); /* 12, not 16 */
+    /* Gold emphasis ring. Figma uses 1px OUTSIDE stroke, but at 358px wide
+       inside a 390px screen with 16px gutters, an outside stroke gets clipped
+       by the screen edges. Use INSET to keep the ring fully visible. */
+    box-shadow: inset 0 0 0 1px var(--color-gold-500);
+    background: var(--color-grey-blue-800);
+    color: var(--color-neutral-0);
+  }
+  .offer-card--hero .offer-card__art {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-03);
+    overflow: hidden;
+    /* PLACEHOLDER — Figma uses a raster image fill (game art). The treatment
+       below is a CSS-only "featured artwork placeholder": a layered radial
+       gradient using brand purple (--color-highlight-purple-500) for the
+       featured/highest-emphasis slot, plus subtle off-axis brand-tint blooms
+       for depth. This signals "artwork goes here" without faking illustrations. */
+    background:
+      /* Off-axis brand-tint bloom (top-left, fuschia at low alpha) */
+      radial-gradient(
+        ellipse 60% 50% at 18% 22%,
+        rgba(229, 51, 201, 0.28) 0%,
+        rgba(229, 51, 201, 0) 60%
+      ),
+      /* Off-axis brand-tint bloom (bottom-right, blue-ribbon at low alpha) */
+      radial-gradient(
+        ellipse 55% 45% at 82% 78%,
+        rgba(85, 91, 255, 0.32) 0%,
+        rgba(85, 91, 255, 0) 65%
+      ),
+      /* Centered focal light — the "spotlight" where artwork would sit */
+      radial-gradient(
+        ellipse 70% 60% at 50% 40%,
+        var(--color-highlight-purple-400) 0%,
+        var(--color-highlight-purple-500) 35%,
+        var(--color-highlight-purple-700) 75%,
+        var(--color-grey-blue-900) 100%
+      );
+  }
+  /* Soft brand glyph in the centered focal area — reads as "featured artwork
+     would sit here." A simple sparkle/star monogram in white at low opacity. */
+  .offer-card--hero .offer-card__art::before {
+    content: "";
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -58%);
+    width: 96px; height: 96px;
+    background: radial-gradient(circle, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0) 65%);
+    /* SVG-as-mask: 4-pointed sparkle/diamond, subtle */
+    -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 5 L58 42 L95 50 L58 58 L50 95 L42 58 L5 50 L42 42 Z' fill='white'/></svg>");
+            mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 5 L58 42 L95 50 L58 58 L50 95 L42 58 L5 50 L42 42 Z' fill='white'/></svg>");
+    -webkit-mask-size: contain;
+            mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+    background-color: rgba(255, 255, 255, 0.18);
+    pointer-events: none;
+  }
+  /* Bottom gradient overlay — Figma 13011:9701 child "Gradient":
+     358×143, anchored to bottom, cornerRadius bottom-left/right 12.
+     GRADIENT_LINEAR top→bottom, stops:
+       0%   #141523 alpha 0
+       40%  #141523 alpha 1   ← hard cutoff
+     This produces a darkened bottom 60% of the card, hard cutoff at 40%
+     up from the bottom, transparent above. */
+  .offer-card--hero .offer-card__art-overlay {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 143px;
+    border-radius: 0 0 var(--radius-03) var(--radius-03);
+    background: linear-gradient(
+      to bottom,
+      rgba(20, 21, 35, 0) 0%,
+      rgba(20, 21, 35, 1) 40%,
+      rgba(20, 21, 35, 1) 100%
+    );
+    pointer-events: none;
+  }
+
+  /* "Earn 7x more" boost tag — Figma 13011:9701;767:2613
+     94×24, padding 8/2/8/2, fill #FFE229, ONLY bottom-left corner radius 12,
+     text Poppins Medium 12/20, color #141523 (near-black). */
+  .boost-tag {
+    position: absolute;
+    top: 0; right: 0;
+    padding: 2px var(--spacing-03);
+    background: var(--color-gold-500);
+    color: var(--color-grey-blue-900);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-xs); /* 12 */
+    line-height: var(--font-line-height-xs); /* 20 */
+    border-radius: 0 0 0 var(--radius-03); /* only bottom-left */
+    z-index: 2;
+  }
+
+  /* "Direction" arrow on the right — Figma 13011:9701;767:2623
+     36×36, glassmorphic: white@10% fill, white@10% 1px stroke,
+     backdrop-filter blur 4, cornerRadius 100, padding 8/8/8/8.
+     Contains a 20×20 white CaretRight glyph. */
+  .direction-arrow {
+    position: absolute;
+    top: 50%;
+    right: var(--spacing-04); /* 12, but Figma is at right:0 of the offer-info inner padding */
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--color-neutral-0-a10); /* white 10% */
+    border: 1px solid var(--color-neutral-0-a10);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    color: var(--color-neutral-0);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3;
+  }
+  .direction-arrow svg { display: block; }
+
+  /* Hero footer (the title + chips + CTA stack at the bottom). Inside Figma
+     this is the "Offer Info" frame: VERTICAL, padding 0/16/0/16, gap 12. */
+  .offer-card--hero .offer-card__footer {
+    position: absolute;
+    left: 0; right: 0; bottom: var(--spacing-05); /* paddingBottom 16 */
+    padding: 0 var(--spacing-05);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-04); /* 12 */
+    z-index: 2;
+  }
+  .offer-card--hero .offer-card__title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-04);
+  }
+  .offer-card--hero .offer-card__title {
+    /* "Title and Rating" → "Placeholder" text: Poppins SemiBold 16/24, white. */
+    font-size: var(--font-size-md); /* 16 */
+    line-height: var(--font-line-height-md); /* 24 */
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-neutral-0);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .offer-card--hero .offer-card__chips {
+    display: flex; align-items: center; gap: var(--spacing-02); /* 4 */
+    flex-shrink: 0;
+  }
+
+  /* ----- Glassmorphic Rating & Device chips -----
+     Both share the same pattern: white@10% fill, white@10% 0.5px stroke,
+     cornerRadius 40 (small) / 100 (hero), backdrop-filter blur 4.
+     Rating = padding 8/2/8/2, gap 2.
+     Device  = padding 8/4/8/4. */
+  .glass-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    padding: 2px var(--spacing-03); /* 2 / 8 */
+    background: var(--color-neutral-0-a10);
+    border: 0.5px solid var(--color-neutral-0-a10);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 40px;
+    color: var(--color-neutral-0);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-xs); /* 12 */
+    line-height: var(--font-line-height-xs); /* 20 */
+  }
+  .glass-pill--device {
+    padding: 4px var(--spacing-03); /* 4 / 8 */
+    gap: 0;
+  }
+  .glass-pill__play { display: inline-flex; }
+  .glass-pill__play svg { display: block; width: 12px; height: 12px; }
+  .glass-pill__star  { color: var(--color-yellow-400); font-size: 12px; line-height: 1; }
+
+  /* button_special — Figma 13011:9701;767:2621 (variant=gold, size=lg).
+     Inner Layer-state frame: 326×44, padding 12/20/12/20, cornerRadius 8,
+     fill #FFE229, drop shadow (0,4) radius 0 #B39A1E (gold-600).
+     Text "Play and Earn $29.99": Poppins SemiBold 16/20 (NOT 24), color #141523.
+     Note the chunky 4px hard-edge drop shadow — this is the gold variant's signature. */
+  .btn-special {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 44px;
+    padding: 12px 20px;
+    border: 0;
+    border-radius: var(--radius-02); /* 8 */
+    background: var(--color-gold-500);
+    color: var(--color-grey-blue-900);
+    font-family: var(--font-family-typography);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-md); /* 16 */
+    line-height: var(--font-line-height-xs); /* 20 */
+    cursor: pointer;
+    box-shadow: 0 4px 0 0 var(--color-gold-600);
+    margin-bottom: 4px; /* leave room for the shadow inside the card padding */
+  }
+
+  /* ================================================================
+     OFFER CARD — small (Size=Small)
+     Figma: 13011:9712 — 111×175, cornerRadius 12, stroke 1px OUTSIDE.
+       Highest emphasis = stroke #FFE229 (gold)
+       High emphasis    = stroke --color-highlight-orange-500
+       Default emphasis = no stroke
+     Background is image fill in Figma — placeholder neutral here.
+     ================================================================ */
+  .offer-card--sm {
+    position: relative;
+    flex: 0 0 auto;
+    width: 111px;
+    height: 175px;
+    border-radius: var(--radius-03); /* 12 */
+    background: var(--color-grey-blue-800);
+  }
+  /* Inset emphasis ring (Figma uses OUTSIDE 1px stroke; we use inset to avoid
+     clipping at row edges). Visually nearly identical at 1px width. */
+  .offer-card--sm[data-emphasis="Highest"] {
+    box-shadow: inset 0 0 0 1px var(--color-gold-500);
+  }
+  .offer-card--sm[data-emphasis="High"] {
+    box-shadow: inset 0 0 0 1px var(--color-highlight-orange-500);
+  }
+  /* Inner art clips its own corners */
+  .offer-card--sm .offer-card__art {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 111px;
+    border-radius: var(--radius-03) var(--radius-03) 0 0;
+    overflow: hidden;
+    /* PLACEHOLDER — Figma uses raster image fills (game art).
+       The treatment is a CSS-only "featured artwork placeholder": a soft
+       radial spotlight in a brand-tint color, with a faint sparkle glyph
+       at the focal point. Three tint variants cycle through the carousel
+       so the row has visual rhythm matching how real game art varies card-
+       to-card. Cycling is via :nth-child(3n+1/2/3) on the parent .row. */
+    background: var(--color-grey-blue-800);
+  }
+  /* Default (purple) — the "highest emphasis" tint */
+  .offer-card--sm .offer-card__art {
+    background:
+      radial-gradient(
+        ellipse 110% 90% at 50% 45%,
+        var(--color-highlight-purple-400) 0%,
+        var(--color-highlight-purple-600) 60%,
+        var(--color-highlight-purple-800) 100%
+      );
+  }
+  /* 2nd in row — blue-ribbon tint */
+  .row > .offer-card--sm:nth-child(3n+2) .offer-card__art {
+    background:
+      radial-gradient(
+        ellipse 110% 90% at 50% 45%,
+        var(--color-highlight-blue-ribbon-400) 0%,
+        var(--color-highlight-blue-ribbon-600) 60%,
+        var(--color-highlight-blue-ribbon-800) 100%
+      );
+  }
+  /* 3rd in row — orange tint */
+  .row > .offer-card--sm:nth-child(3n+3) .offer-card__art {
+    background:
+      radial-gradient(
+        ellipse 110% 90% at 50% 45%,
+        var(--color-highlight-orange-400) 0%,
+        var(--color-highlight-orange-600) 60%,
+        var(--color-highlight-orange-800) 100%
+      );
+  }
+  /* Soft sparkle glyph at the focal point — same monogram as the hero,
+     scaled down. Reads as "featured artwork would sit here." */
+  .offer-card--sm .offer-card__art::before {
+    content: "";
+    position: absolute;
+    top: 38%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 44px; height: 44px;
+    -webkit-mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 5 L58 42 L95 50 L58 58 L50 95 L42 58 L5 50 L42 42 Z' fill='white'/></svg>");
+            mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 5 L58 42 L95 50 L58 58 L50 95 L42 58 L5 50 L42 42 Z' fill='white'/></svg>");
+    -webkit-mask-size: contain;
+            mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+    background-color: rgba(255, 255, 255, 0.20);
+    pointer-events: none;
+  }
+  /* "7x" boost tag — only bottom-left radius is rounded (12) */
+  .offer-card--sm .offer-card__boost {
+    position: absolute;
+    top: 0; right: 0;
+    padding: 2.5px var(--spacing-03);
+    background: var(--color-gold-500);
+    color: var(--color-grey-blue-900);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-micro); /* 10 */
+    line-height: var(--font-line-height-micro); /* 14 */
+    border-radius: 0 0 0 var(--radius-03);
+    z-index: 2;
+  }
+  /* Glassmorphic rating chip overlaid on the art bottom-left */
+  .offer-card--sm .offer-card__rating {
+    position: absolute;
+    left: var(--spacing-03);
+    bottom: 72px; /* sits over the gradient, above the title block */
+    z-index: 2;
+  }
+  /* NOTE: Figma includes a 100×111 bottom-fade gradient overlay on the art
+     (13011:9712;767:2626) for the case where game art bleeds behind the
+     rating chip. We omit it here because the placeholder treatment is
+     uniform — adding a fade would just dim the brand color for no reason.
+     If real artwork is dropped in, restore the fade as ::after on .offer-card__art. */
+
+  /* Bottom info block — Figma "Offer Info" frame, padding 0/8/8/8, gap 12.
+     Inside: Device & Rating Container row, then Title (Regular 12) + Price (SemiBold 12).
+     Both white. */
+  .offer-card--sm .offer-card__body {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 0 var(--spacing-03) var(--spacing-03);
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .offer-card--sm .offer-card__name {
+    font-family: var(--font-family-typography);
+    font-size: var(--font-size-xs); /* 12 */
+    line-height: var(--font-line-height-xs); /* 20 */
+    font-weight: var(--font-weight-regular); /* 400 — NOT medium */
+    color: var(--color-neutral-0);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+  }
+  .offer-card--sm .offer-card__reward {
+    font-family: var(--font-family-typography);
+    font-size: var(--font-size-xs); /* 12 */
+    line-height: var(--font-line-height-xs); /* 20 */
+    font-weight: var(--font-weight-semibold); /* 600 */
+    color: var(--color-neutral-0); /* WHITE — NOT yellow */
+    margin: 0;
+  }
+
+  /* ================================================================
+     SURVEY CARD (local Card frame in Figma — not a component yet)
+     Figma: 13011:9757..9841 — 111×175. The thumbnail is an INSTANCE
+     of "Survey Thumbnail" with variants (Premium, High Paying, etc.)
+     each carrying its own gradient + icon raster. Placeholder neutral here.
+     [V1.1 candidate for components.md — "Survey Card"]
+     ================================================================ */
+  .survey-card {
+    position: relative;
+    flex: 0 0 auto;
+    width: 111px;
+    height: 175px;
+    border-radius: var(--radius-03);
+    background: var(--color-grey-blue-800);
+  }
+  .survey-card__thumb {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 111px;
+    border-radius: var(--radius-03) var(--radius-03) 0 0;
+    background: var(--color-grey-blue-700); /* neutral placeholder for raster */
+  }
+  .survey-card__rating {
+    position: absolute;
+    left: var(--spacing-03);
+    bottom: 76px;
+    z-index: 2;
+  }
+  .survey-card__body {
+    position: absolute;
+    left: 0; right: 0;
+    top: 111px;
+    height: 64px;
+    padding: 6px var(--spacing-03);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0;
+  }
+  .survey-card__name {
+    font-family: var(--font-family-typography);
+    font-size: var(--font-size-xs);
+    line-height: 18px;
+    font-weight: var(--font-weight-regular);
+    color: var(--color-neutral-0);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+  }
+  .survey-card__duration {
+    font-family: var(--font-family-typography);
+    font-size: var(--font-size-micro);
+    line-height: 14px;
+    color: var(--color-grey-blue-50);
+    margin: 0;
+  }
+  .survey-card__reward {
+    font-family: var(--font-family-typography);
+    font-size: var(--font-size-xs);
+    line-height: 18px;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-neutral-0);
+    margin: 0;
+  }
+
+  /* ================================================================
+     OFFER PARTNER CARD (local Card frame in Figma — not a component yet)
+     Figma: 13011:9867, 9880, 9893 — 111×175. Logo Partners (Digital
+     Turbine / BitLabs / Monlix) is a vector logo INSTANCE; +50% boost
+     badge on the first two only. Placeholder neutral here.
+     [V1.1 candidate for components.md — "Offer Partner Card"]
+     ================================================================ */
+  .partner-card {
+    position: relative;
+    flex: 0 0 auto;
+    width: 111px;
+    height: 175px;
+    border-radius: var(--radius-03);
+    background: var(--color-grey-blue-800);
+  }
+  .partner-card__logo-area {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 111px;
+    border-radius: var(--radius-03) var(--radius-03) 0 0;
+    background: var(--color-grey-blue-700); /* neutral placeholder for logo asset */
+  }
+  .partner-card__boost {
+    position: absolute;
+    top: 0; left: 0;
+    padding: 2.5px var(--spacing-03);
+    background: var(--color-freecash-green-500);
+    color: var(--color-grey-blue-900);
+    font-weight: var(--font-weight-medium);
+    font-size: var(--font-size-micro);
+    line-height: var(--font-line-height-micro);
+    border-radius: var(--radius-03) 0 0 0;
+    z-index: 2;
+  }
+  .partner-card__rating {
+    position: absolute;
+    right: var(--spacing-03);
+    top: var(--spacing-03);
+    z-index: 2;
+  }
+  .partner-card__body {
+    position: absolute;
+    left: 0; right: 0;
+    top: 111px;
+    height: 64px;
+    padding: 8px var(--spacing-03);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+  }
+  .partner-card__name {
+    font-family: var(--font-family-typography);
+    font-size: var(--font-size-xs);
+    line-height: 18px;
+    font-weight: var(--font-weight-regular);
+    color: var(--color-neutral-0);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
+  }
+  .partner-card__reward {
+    font-family: var(--font-family-typography);
+    font-size: var(--font-size-xs);
+    line-height: 18px;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-neutral-0);
+    margin: 0;
+  }
+
+  /* ================================================================
+     BOTTOM TABBAR — fixed, 94px (73 tabs + 21 home indicator)
+     Figma: 13011:9906, componentId 13009:3065, Item=Earn
+     components.md entry: "Bottom TabBar"; layouts.md has the full spec.
+     ================================================================ */
+  .tabbar {
+    position: absolute;
+    left: 0; bottom: 0;
+    width: 390px;
+    height: 94px;
+    background: var(--color-grey-blue-700);
+    z-index: 10;
+  }
+  .tabbar__row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    height: 73px;
+  }
+  .tabbar__tab {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-02); /* 4 */
+    padding: 15.5px 0;
+    color: var(--color-grey-blue-100);
+    text-decoration: none;
+  }
+  .tabbar__tab[aria-current="page"] { color: var(--color-freecash-green-500); }
+  .tabbar__tab[aria-current="page"] .tabbar__label { color: var(--color-neutral-0); }
+  /* Active glow ellipse — [V1.1 candidate: --color-tab-active-glow] */
+  .tabbar__tab[aria-current="page"]::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 26px;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--color-freecash-green-500);
+    opacity: 0.20;
+    filter: blur(16px); /* approximates Figma's 41px Layer Blur visually at raster scale 1 */
+    pointer-events: none;
+  }
+  .tabbar__icon {
+    position: relative;
+    z-index: 1;
+    width: 24px; height: 24px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .tabbar__icon svg { display: block; }
+  .tabbar__label {
+    position: relative;
+    z-index: 1;
+    font-family: var(--font-family-typography);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-micro); /* 10 */
+    line-height: var(--font-line-height-micro); /* 14 */
+    letter-spacing: 0;
+  }
+  .tabbar__home-indicator {
+    height: 21px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .tabbar__home-indicator-bar {
+    width: 139px;
+    height: 5px;
+    background: var(--color-neutral-0);
+    border-radius: var(--radius-08);
+  }
+</style>
+</head>
+
+<body>
+  <main class="screen" aria-label="Freecash — Earn screen">
+
+    <!-- ============================================================
+         HEADER (Figma 13011:9907)
+         ============================================================ -->
+    <header class="screen__header" data-region="Header">
+
+      <!-- Status Bar (iOS portrait) — Figma 13011:9908
+           [V1.1 candidate for components.md] -->
+      <div class="status-bar" aria-hidden="true">
+        <span class="status-bar__time">9:41</span>
+        <span class="status-bar__right">
+          <!-- Mobile signal -->
+          <svg width="18" height="11" viewBox="0 0 18 11" fill="currentColor">
+            <rect x="0"  y="7" width="3" height="4" rx="0.5"/>
+            <rect x="5"  y="5" width="3" height="6" rx="0.5"/>
+            <rect x="10" y="2" width="3" height="9" rx="0.5"/>
+            <rect x="15" y="0" width="3" height="11" rx="0.5"/>
+          </svg>
+          <!-- Wifi -->
+          <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor">
+            <path d="M8 0C4.7 0 1.7 1.3-.5 3.4l1.4 1.4C2.7 3 5.2 1.9 8 1.9s5.3 1.1 7.1 2.9l1.4-1.4C14.3 1.3 11.3 0 8 0zM3 5.7l1.4 1.4A5.2 5.2 0 018 5.7c1.4 0 2.7.5 3.6 1.4L13 5.7a7.2 7.2 0 00-10 0zM5.5 8.2l2.5 2.5 2.5-2.5A3.5 3.5 0 008 7.2a3.5 3.5 0 00-2.5 1z"/>
+          </svg>
+          <!-- Battery -->
+          <svg width="25" height="11" viewBox="0 0 25 11" fill="none">
+            <rect x="0.5" y="0.5" width="21" height="10" rx="2.5" stroke="currentColor" stroke-opacity="0.35"/>
+            <rect x="2"   y="2"   width="18" height="7" rx="1.5" fill="currentColor"/>
+            <rect x="22.5" y="3.5" width="1.5" height="4" rx="0.5" fill="currentColor" fill-opacity="0.4"/>
+          </svg>
+        </span>
+      </div>
+
+      <!-- Header balance — Figma 13011:9909
+           components.md entry: "Top Navigation — Header balance"
+           Layout: avatar (left) | chips group (centered) | bell (right) -->
+      <div class="header-balance" data-region="Header balance">
+        <!-- Avatar (user initial) — [V1.1 candidate: "User Avatar"] -->
+        <div class="avatar" aria-label="User J">J</div>
+
+        <!-- Centered chips group: Streak + Balance + Lottery -->
+        <div class="header-chips" role="group" aria-label="Header balance chips">
+
+          <!-- Streak container — Header component variant=Streak container.
+               Inner frame: padding 8/14/8/14, gap 2, fill #1F222D,
+               1px stroke #7A3F04, drop shadow (0,2) r=0 #793F04, radius 12.
+               Icon: flame, 16x16, fill #FC8413 (--color-highlight-orange-500).
+               Count "7": Poppins Medium 14/22, white. -->
+          <span class="header-chip" data-component="Header component" data-variant="Streak container">
+            <span class="header-chip__icon" style="color: var(--color-highlight-orange-500);" aria-hidden="true">
+              <!-- Flame icon, 16x16 -->
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M13.5.67s.74 2.65.74 4.8c0 2.06-1.35 3.73-3.41 3.73-2.07 0-3.63-1.67-3.63-3.73l.03-.36C5.21 7.51 4 10.62 4 14c0 4.42 3.58 8 8 8s8-3.58 8-8C20 8.61 17.41 3.8 13.5.67zM11.71 19c-1.78 0-3.22-1.4-3.22-3.14 0-1.62 1.05-2.76 2.81-3.12 1.77-.36 3.6-1.21 4.62-2.58.39 1.29.59 2.65.59 4.04 0 2.65-2.15 4.8-4.8 4.8z"/>
+              </svg>
+            </span>
+            <span>7</span>
+          </span>
+
+          <!-- Balance container — same chip frame, accent green.
+               Stroke #0B7546, shadow #0B7445, fill #1F222D.
+               No icon — the "$" glyph IS the icon, rendered green inside the price text. -->
+          <span class="header-chip" data-component="Header component" data-variant="Balance container">
+            <span><span class="header-chip__currency">$</span>0.00</span>
+          </span>
+
+          <!-- Lottery container — same chip frame, accent lavender.
+               Stroke #6C6E9C, shadow #6C6E9B.
+               Icon: ticket, 16x14, fill #C2D0FF (--color-highlight-blue-ribbon-100). -->
+          <span class="header-chip" data-component="Header component" data-variant="Lottery Container">
+            <span class="header-chip__icon" style="color: var(--color-highlight-blue-ribbon-100);" aria-hidden="true">
+              <!-- Ticket icon, 16x14 -->
+              <svg width="16" height="14" viewBox="0 0 16 14" fill="currentColor">
+                <path d="M14 4V2.5A1.5 1.5 0 0012.5 1h-9A1.5 1.5 0 002 2.5V4a1.5 1.5 0 010 3v1.5A1.5 1.5 0 003.5 10h9a1.5 1.5 0 001.5-1.5V7a1.5 1.5 0 010-3z"/>
+              </svg>
+            </span>
+            <span>23k</span>
+          </span>
+        </div>
+
+        <!-- Bell — Figma 13011:9917. All vectors filled green (#01D676)
+             with a small notification indicator dot at top-right. -->
+        <span class="bell" aria-label="Notifications, 1 new">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+            <!-- Bell body, filled -->
+            <path d="M12 2.5a6 6 0 00-6 6v3.2c0 .6-.2 1.2-.6 1.7L4 15.4V17h16v-1.6l-1.4-2c-.4-.5-.6-1.1-.6-1.7V8.5a6 6 0 00-6-6z" opacity="0.95"/>
+            <!-- Clapper at bottom (60% opacity in source) -->
+            <path d="M10.3 19a2 2 0 003.4 0H10.3z" opacity="0.6"/>
+            <!-- Notification indicator dot, top-right -->
+            <circle cx="18" cy="6" r="3.5" fill="var(--color-grey-blue-700)"/>
+            <circle cx="18" cy="6" r="2.5" fill="currentColor"/>
+          </svg>
+        </span>
+      </div>
+
+    </header>
+
+    <!-- ============================================================
+         BODY (Figma 13011:9690)
+         ============================================================ -->
+    <div class="body" data-region="Body">
+
+      <!-- 1. CashoutProgress (Figma 13011:9691)
+           [V1.1 candidate: "Cashout Progress" component] -->
+      <section class="cashout-progress" data-section="CashoutProgress">
+        <p class="cashout-progress__title">Next cashout</p>
+        <div class="cashout-progress__bar" role="progressbar"
+             aria-valuenow="5" aria-valuemin="0" aria-valuemax="20"
+             aria-label="Cashout progress: $5 of $20">
+          <div class="cashout-progress__fill"></div>
+          <span class="cashout-progress__amount">$5.00 / $20.00</span>
+        </div>
+      </section>
+
+      <!-- 2. Best for You — Figma 13011:9696 "Section container"
+           Hero section: 2 × Offer Card (Size=Medium, Emphasis=Highest).
+           No "View all" CTA — first-section rule (layouts.md Rule #2). -->
+      <section class="section" data-section="Best for You">
+        <div class="section__title">
+          <div class="section__title-left">
+            <span class="section__title-icon" style="color: var(--color-yellow-400);" aria-hidden="true">
+              <!-- Trophy -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M7 4V2h10v2h4v3c0 2.21-1.79 4-4 4h-.5A6.5 6.5 0 0113 15.9V18h3v2H8v-2h3v-2.1A6.5 6.5 0 016.5 11H6c-2.21 0-4-1.79-4-4V4h5zm10 2v3a2 2 0 002-2V6h-2zM7 6H5v1a2 2 0 002 2V6z"/>
+              </svg>
+            </span>
+            <h2 class="section__title-text">Best for You</h2>
+          </div>
+        </div>
+
+        <div class="row">
+          <!-- Hero Offer Card 1: Domino Dreams.
+               Figma: 13011:9701 — Size=Medium, Emphasis=Highest.
+               Anatomy: art layer (placeholder, real Figma is image fill) +
+               gradient overlay (linear, hard cutoff at 40%) + boost tag (top-right,
+               only bottom-left rounded) + direction arrow (vertically centered, right) +
+               footer (title row with glassmorphic chips, then button_special). -->
+          <article class="offer-card--hero" data-component="Offer Card" data-size="Medium" data-emphasis="Highest">
+            <!-- Art placeholder. Real Figma uses an image fill (game art raster). -->
+            <div class="offer-card__art" aria-hidden="true"></div>
+
+            <!-- Bottom gradient overlay -->
+            <div class="offer-card__art-overlay" aria-hidden="true"></div>
+
+            <!-- Boost tag, top-right corner. Only bottom-left corner is rounded. -->
+            <div class="boost-tag">Earn 7x more</div>
+
+            <!-- Direction (carousel next) arrow, glassmorphic. -->
+            <button class="direction-arrow" aria-label="Next offer">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="7.5 15 12.5 10 7.5 5"/>
+              </svg>
+            </button>
+
+            <div class="offer-card__footer">
+              <div class="offer-card__title-row">
+                <h3 class="offer-card__title">Domino Dreams</h3>
+                <div class="offer-card__chips">
+                  <!-- Rating "App Store" variant: green play triangle + 4.5 + yellow star, glassmorphic. -->
+                  <span class="glass-pill" data-component="Rating container" data-variant="App Store">
+                    <span class="glass-pill__play" aria-hidden="true">
+                      <!-- Google Play colored triangle (simplified) -->
+                      <svg viewBox="0 0 12 12" fill="none">
+                        <path d="M2 1.5v9l8-4.5z" fill="#00D676"/>
+                      </svg>
+                    </span>
+                    <span>4.5</span>
+                    <span class="glass-pill__star">★</span>
+                  </span>
+                  <!-- Device chip Android variant, glassmorphic. -->
+                  <span class="glass-pill glass-pill--device" data-component="Device" data-variant="Android" aria-label="Android">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M6 9v8c0 .55.45 1 1 1h1v3c0 .55.45 1 1 1s1-.45 1-1v-3h2v3c0 .55.45 1 1 1s1-.45 1-1v-3h1c.55 0 1-.45 1-1V9H6zm-2 0c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1s1-.45 1-1v-6c0-.55-.45-1-1-1zm16 0c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1s1-.45 1-1v-6c0-.55-.45-1-1-1zm-3.3-6.3l1-1-.7-.7-1.1 1.2A5 5 0 0012 2a5 5 0 00-2.9.5L8 1.3l-.7.7 1 1A5 5 0 006 8h12a5 5 0 00-2.3-5.3z"/>
+                    </svg>
+                  </span>
+                </div>
+              </div>
+              <button class="btn-special" data-component="button_special" data-variant="gold">
+                Play and Earn $29.99
+              </button>
+            </div>
+          </article>
+
+          <!-- Hero Offer Card 2: Monopoly Go (mostly off-screen as horizontal carousel sibling). -->
+          <article class="offer-card--hero" data-component="Offer Card" data-size="Medium" data-emphasis="Highest" aria-hidden="true">
+            <div class="offer-card__art" aria-hidden="true"></div>
+            <div class="offer-card__art-overlay" aria-hidden="true"></div>
+            <div class="boost-tag">Earn 7x more</div>
+            <div class="offer-card__footer">
+              <div class="offer-card__title-row">
+                <h3 class="offer-card__title">Monopoly Go</h3>
+                <div class="offer-card__chips">
+                  <span class="glass-pill" data-component="Rating container" data-variant="App Store">
+                    <span class="glass-pill__play" aria-hidden="true">
+                      <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+                    </span>
+                    <span>4.5</span>
+                    <span class="glass-pill__star">★</span>
+                  </span>
+                </div>
+              </div>
+              <button class="btn-special" data-component="button_special" data-variant="gold">
+                Play and Earn $42.00
+              </button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 3. Highest Rewards — Figma 13011:9703
+           6 × Offer Card (Size=Small, Emphasis=Highest).
+           Displayed as a 2-row wrap since the reference shows the full row flat. -->
+      <section class="section" data-section="Highest Rewards">
+        <div class="section__title">
+          <div class="section__title-left">
+            <span class="section__title-icon" style="color: var(--color-yellow-400);" aria-hidden="true">
+              <!-- Money Bag -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2l-2 2h4l-2-2zM8 4l-1.5 3h11L16 4H8zm-2.5 4l-.9 1.8C3.5 11.7 3 13.4 3 15a7 7 0 0014 0c0-1.6-.5-3.3-1.6-5.2L14.5 8h-9zM12 10.5c2 0 3 .5 3 1.8 0 1.2-.9 1.8-2 2v.7a.7.7 0 01-1.4 0V14c-1.4-.3-2.2-1.1-2.4-2.1l1.4-.3c.2.7.9 1.1 1.6 1.1.7 0 1.2-.2 1.2-.6 0-.4-.4-.5-1.2-.7-1.5-.3-2.8-.7-2.8-2.2 0-1 .7-1.7 1.8-2V7a.7.7 0 011.4 0V7.2c1.3.3 2 1.1 2.2 2.1l-1.4.3c-.2-.6-.7-1-1.4-1-.8 0-1.2.3-1.2.6 0 .4.5.5 1.2.7z"/>
+              </svg>
+            </span>
+            <h2 class="section__title-text">Highest Rewards</h2>
+          </div>
+          <a class="section__title-cta" href="#">
+            View all
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </a>
+        </div>
+
+        <div class="row" style="flex-wrap: wrap;">
+          <!-- 6 small Offer Cards (Emphasis=Highest → yellow ring) -->
+          <article class="offer-card--sm" data-component="Offer Card" data-size="Small" data-emphasis="Highest">
+            <!-- Art placeholder — Figma uses a raster game-art image fill. -->
+            <div class="offer-card__art" aria-hidden="true"></div>
+            <div class="offer-card__boost">7x</div>
+            <!-- Glassmorphic rating chip -->
+            <span class="glass-pill offer-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="offer-card__body">
+              <p class="offer-card__name">Domino Dreams</p>
+              <p class="offer-card__reward">$56.55</p>
+            </div>
+          </article>
+
+          <article class="offer-card--sm" data-component="Offer Card" data-size="Small" data-emphasis="Highest">
+            <!-- Art placeholder — Figma uses a raster game-art image fill. -->
+            <div class="offer-card__art" aria-hidden="true"></div>
+            <div class="offer-card__boost">7x</div>
+            <!-- Glassmorphic rating chip -->
+            <span class="glass-pill offer-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="offer-card__body">
+              <p class="offer-card__name">Disney Solitaire</p>
+              <p class="offer-card__reward">$150+</p>
+            </div>
+          </article>
+
+          <article class="offer-card--sm" data-component="Offer Card" data-size="Small" data-emphasis="Highest">
+            <!-- Art placeholder — Figma uses a raster game-art image fill. -->
+            <div class="offer-card__art" aria-hidden="true"></div>
+            <div class="offer-card__boost">7x</div>
+            <!-- Glassmorphic rating chip -->
+            <span class="glass-pill offer-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="offer-card__body">
+              <p class="offer-card__name">Tasty Travels</p>
+              <p class="offer-card__reward">$29.30</p>
+            </div>
+          </article>
+
+          <article class="offer-card--sm" data-component="Offer Card" data-size="Small" data-emphasis="Highest">
+            <!-- Art placeholder — Figma uses a raster game-art image fill. -->
+            <div class="offer-card__art" aria-hidden="true"></div>
+            <div class="offer-card__boost">7x</div>
+            <!-- Glassmorphic rating chip -->
+            <span class="glass-pill offer-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="offer-card__body">
+              <p class="offer-card__name">Sunshine Islands</p>
+              <p class="offer-card__reward">$100</p>
+            </div>
+          </article>
+
+          <article class="offer-card--sm" data-component="Offer Card" data-size="Small" data-emphasis="Highest">
+            <!-- Art placeholder — Figma uses a raster game-art image fill. -->
+            <div class="offer-card__art" aria-hidden="true"></div>
+            <div class="offer-card__boost">7x</div>
+            <!-- Glassmorphic rating chip -->
+            <span class="glass-pill offer-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="offer-card__body">
+              <p class="offer-card__name">Puzzle &amp; Chaos</p>
+              <p class="offer-card__reward">$89</p>
+            </div>
+          </article>
+
+          <article class="offer-card--sm" data-component="Offer Card" data-size="Small" data-emphasis="Highest">
+            <!-- Art placeholder — Figma uses a raster game-art image fill. -->
+            <div class="offer-card__art" aria-hidden="true"></div>
+            <div class="offer-card__boost">7x</div>
+            <!-- Glassmorphic rating chip -->
+            <span class="glass-pill offer-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="offer-card__body">
+              <p class="offer-card__name">Star Trek Fleet</p>
+              <p class="offer-card__reward">$50</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 4. High Rewards — Figma 13011:9718
+           6 × Offer Card (Size=Small, Emphasis=High → orange ring). -->
+      <section class="section" data-section="High Rewards">
+        <div class="section__title">
+          <div class="section__title-left">
+            <span class="section__title-icon" style="color: var(--color-highlight-orange-500);" aria-hidden="true">
+              <!-- HandCoins -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="17" cy="6" r="3"/>
+                <path d="M2 13c0-1 1-2 2-2h3l2 2h3c1 0 2 1 2 2v2H6v2H4c-1 0-2-1-2-2v-4z"/>
+                <path d="M14 11l5-2c1-.4 2 .5 1.6 1.5L18 17c-.4 1-1.6 1-2 0l-2-6z" opacity="0.7"/>
+              </svg>
+            </span>
+            <h2 class="section__title-text">High Rewards</h2>
+          </div>
+          <a class="section__title-cta" href="#">
+            View all
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </a>
+        </div>
+
+        <div class="row" style="flex-wrap: wrap;">
+          <article class="offer-card--sm" data-component="Offer Card" data-size="Small" data-emphasis="High">
+            <!-- Art placeholder — Figma uses a raster game-art image fill. -->
+            <div class="offer-card__art" aria-hidden="true"></div>
+            <div class="offer-card__boost">7x</div>
+            <!-- Glassmorphic rating chip -->
+            <span class="glass-pill offer-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="offer-card__body">
+              <p class="offer-card__name">Domino Dreams</p>
+              <p class="offer-card__reward">$56.55</p>
+            </div>
+          </article>
+          <article class="offer-card--sm" data-component="Offer Card" data-size="Small" data-emphasis="High">
+            <!-- Art placeholder — Figma uses a raster game-art image fill. -->
+            <div class="offer-card__art" aria-hidden="true"></div>
+            <div class="offer-card__boost">7x</div>
+            <!-- Glassmorphic rating chip -->
+            <span class="glass-pill offer-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="offer-card__body">
+              <p class="offer-card__name">Disney Solitaire</p>
+              <p class="offer-card__reward">$150+</p>
+            </div>
+          </article>
+          <article class="offer-card--sm" data-component="Offer Card" data-size="Small" data-emphasis="High">
+            <!-- Art placeholder — Figma uses a raster game-art image fill. -->
+            <div class="offer-card__art" aria-hidden="true"></div>
+            <div class="offer-card__boost">7x</div>
+            <!-- Glassmorphic rating chip -->
+            <span class="glass-pill offer-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="offer-card__body">
+              <p class="offer-card__name">Tasty Travels</p>
+              <p class="offer-card__reward">$29.30</p>
+            </div>
+          </article>
+          <article class="offer-card--sm" data-component="Offer Card" data-size="Small" data-emphasis="High">
+            <!-- Art placeholder — Figma uses a raster game-art image fill. -->
+            <div class="offer-card__art" aria-hidden="true"></div>
+            <div class="offer-card__boost">7x</div>
+            <!-- Glassmorphic rating chip -->
+            <span class="glass-pill offer-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="offer-card__body">
+              <p class="offer-card__name">Sunshine Islands</p>
+              <p class="offer-card__reward">$100</p>
+            </div>
+          </article>
+          <article class="offer-card--sm" data-component="Offer Card" data-size="Small" data-emphasis="High">
+            <!-- Art placeholder — Figma uses a raster game-art image fill. -->
+            <div class="offer-card__art" aria-hidden="true"></div>
+            <div class="offer-card__boost">7x</div>
+            <!-- Glassmorphic rating chip -->
+            <span class="glass-pill offer-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="offer-card__body">
+              <p class="offer-card__name">Puzzle &amp; Chaos</p>
+              <p class="offer-card__reward">$89</p>
+            </div>
+          </article>
+          <article class="offer-card--sm" data-component="Offer Card" data-size="Small" data-emphasis="High">
+            <!-- Art placeholder — Figma uses a raster game-art image fill. -->
+            <div class="offer-card__art" aria-hidden="true"></div>
+            <div class="offer-card__boost">7x</div>
+            <!-- Glassmorphic rating chip -->
+            <span class="glass-pill offer-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="offer-card__body">
+              <p class="offer-card__name">Star Trek Fleet</p>
+              <p class="offer-card__reward">$50</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 5. More Offers — Figma 13011:9733
+           Mixed emphasis: first card Highest, second High, rest Default (green reward). -->
+      <section class="section" data-section="More Offers">
+        <div class="section__title">
+          <div class="section__title-left">
+            <span class="section__title-icon" style="color: var(--color-highlight-fuschia-500);" aria-hidden="true">
+              <!-- Gift -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20 12v10H4V12h16zm1-6H3a1 1 0 00-1 1v4a1 1 0 001 1h18a1 1 0 001-1V7a1 1 0 00-1-1zM12 6c-1-3-3-4-5-2s0 4 2 4h3zm0 0c1-3 3-4 5-2s0 4-2 4h-3z"/>
+                <path d="M11 22h2V8h-2v14z" fill="#141523"/>
+              </svg>
+            </span>
+            <h2 class="section__title-text">More Offers</h2>
+          </div>
+          <a class="section__title-cta" href="#">
+            View all
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </a>
+        </div>
+
+        <div class="row" style="flex-wrap: wrap;">
+          <article class="offer-card--sm" data-component="Offer Card" data-size="Small" data-emphasis="Highest">
+            <!-- Art placeholder — Figma uses a raster game-art image fill. -->
+            <div class="offer-card__art" aria-hidden="true"></div>
+            <div class="offer-card__boost">7x</div>
+            <!-- Glassmorphic rating chip -->
+            <span class="glass-pill offer-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="offer-card__body">
+              <p class="offer-card__name">Domino Dreams</p>
+              <p class="offer-card__reward">$56.55</p>
+            </div>
+          </article>
+          <article class="offer-card--sm" data-component="Offer Card" data-size="Small" data-emphasis="High">
+            <!-- Art placeholder — Figma uses a raster game-art image fill. -->
+            <div class="offer-card__art" aria-hidden="true"></div>
+            <div class="offer-card__boost">7x</div>
+            <!-- Glassmorphic rating chip -->
+            <span class="glass-pill offer-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="offer-card__body">
+              <p class="offer-card__name">Disney Solitaire</p>
+              <p class="offer-card__reward">$150+</p>
+            </div>
+          </article>
+          <article class="offer-card--sm" data-component="Offer Card" data-size="Small" data-emphasis="Default">
+            <!-- Art placeholder — Figma uses a raster game-art image fill. -->
+            <div class="offer-card__art" aria-hidden="true"></div>
+            <!-- Glassmorphic rating chip -->
+            <span class="glass-pill offer-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="offer-card__body">
+              <p class="offer-card__name">Tasty Travels</p>
+              <p class="offer-card__reward">$29.30</p>
+            </div>
+          </article>
+          <article class="offer-card--sm" data-component="Offer Card" data-size="Small" data-emphasis="Default">
+            <!-- Art placeholder — Figma uses a raster game-art image fill. -->
+            <div class="offer-card__art" aria-hidden="true"></div>
+            <!-- Glassmorphic rating chip -->
+            <span class="glass-pill offer-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="offer-card__body">
+              <p class="offer-card__name">Sunshine Islands</p>
+              <p class="offer-card__reward">$100</p>
+            </div>
+          </article>
+          <article class="offer-card--sm" data-component="Offer Card" data-size="Small" data-emphasis="Default">
+            <!-- Art placeholder — Figma uses a raster game-art image fill. -->
+            <div class="offer-card__art" aria-hidden="true"></div>
+            <!-- Glassmorphic rating chip -->
+            <span class="glass-pill offer-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="offer-card__body">
+              <p class="offer-card__name">Puzzle &amp; Chaos</p>
+              <p class="offer-card__reward">$89</p>
+            </div>
+          </article>
+          <article class="offer-card--sm" data-component="Offer Card" data-size="Small" data-emphasis="Default">
+            <!-- Art placeholder — Figma uses a raster game-art image fill. -->
+            <div class="offer-card__art" aria-hidden="true"></div>
+            <!-- Glassmorphic rating chip -->
+            <span class="glass-pill offer-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="offer-card__body">
+              <p class="offer-card__name">Star Trek Fleet</p>
+              <p class="offer-card__reward">$50</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 6. Surveys — Figma 13011:9748
+           Local Card frames with Survey Thumbnail variants (Premium/High Paying/Short/Featured/Trending).
+           [V1.1 candidate: "Survey Card" component] -->
+      <section class="section" data-section="Surveys">
+        <div class="section__title">
+          <div class="section__title-left">
+            <span class="section__title-icon" style="color: var(--color-highlight-orange-500);" aria-hidden="true">
+              <!-- Clipboard Text -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M9 2h6a1 1 0 011 1v1h3a2 2 0 012 2v14a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2h3V3a1 1 0 011-1zm0 2v2h6V4H9zm-2 6h10v1.5H7V10zm0 3.5h10V15H7v-1.5zm0 3.5h7v1.5H7V17z"/>
+              </svg>
+            </span>
+            <h2 class="section__title-text">Surveys</h2>
+          </div>
+          <a class="section__title-cta" href="#">
+            View all
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </a>
+        </div>
+
+        <div class="row" style="flex-wrap: wrap;">
+          <!-- Survey Thumbnail Type=Premium (diamond icon) -->
+          <article class="survey-card" data-thumbnail-type="Premium">
+            <!-- Survey Thumbnail (Type=Premium) — Figma uses a gradient + icon raster.
+                 Solid neutral placeholder per user instruction — no fake illustrations. -->
+            <div class="survey-card__thumb" aria-hidden="true"></div>
+            <span class="glass-pill survey-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="survey-card__body">
+              <p class="survey-card__name">Premium</p>
+              <p class="survey-card__duration">6 min</p>
+              <p class="survey-card__reward">$1.25</p>
+            </div>
+          </article>
+
+          <!-- Type=High Paying (money bag) -->
+          <article class="survey-card" data-thumbnail-type="High Paying">
+            <!-- Survey Thumbnail (Type=High Paying) — Figma uses a gradient + icon raster.
+                 Solid neutral placeholder per user instruction — no fake illustrations. -->
+            <div class="survey-card__thumb" aria-hidden="true"></div>
+            <span class="glass-pill survey-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="survey-card__body">
+              <p class="survey-card__name">High Paying S…</p>
+              <p class="survey-card__duration">6 min</p>
+              <p class="survey-card__reward">$1.25</p>
+            </div>
+          </article>
+
+          <!-- Type=Short (rocket) -->
+          <article class="survey-card" data-thumbnail-type="Short">
+            <!-- Survey Thumbnail (Type=Short) — Figma uses a gradient + icon raster.
+                 Solid neutral placeholder per user instruction — no fake illustrations. -->
+            <div class="survey-card__thumb" aria-hidden="true"></div>
+            <span class="glass-pill survey-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="survey-card__body">
+              <p class="survey-card__name">Short Survey</p>
+              <p class="survey-card__duration">6 min</p>
+              <p class="survey-card__reward">$1.25</p>
+            </div>
+          </article>
+
+          <!-- Type=Featured (star) -->
+          <article class="survey-card" data-thumbnail-type="Featured">
+            <!-- Survey Thumbnail (Type=Featured) — Figma uses a gradient + icon raster.
+                 Solid neutral placeholder per user instruction — no fake illustrations. -->
+            <div class="survey-card__thumb" aria-hidden="true"></div>
+            <span class="glass-pill survey-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="survey-card__body">
+              <p class="survey-card__name">Featured Surv…</p>
+              <p class="survey-card__duration">6 min</p>
+              <p class="survey-card__reward">$1.25</p>
+            </div>
+          </article>
+
+          <!-- Type=Trending (flame) -->
+          <article class="survey-card" data-thumbnail-type="Trending">
+            <!-- Survey Thumbnail (Type=Trending) — Figma uses a gradient + icon raster.
+                 Solid neutral placeholder per user instruction — no fake illustrations. -->
+            <div class="survey-card__thumb" aria-hidden="true"></div>
+            <span class="glass-pill survey-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="survey-card__body">
+              <p class="survey-card__name">Trendy Survey</p>
+              <p class="survey-card__duration">6 min</p>
+              <p class="survey-card__reward">$1.25</p>
+            </div>
+          </article>
+
+          <!-- Type=Featured (second) -->
+          <article class="survey-card" data-thumbnail-type="Featured">
+            <!-- Survey Thumbnail (Type=Featured) — Figma uses a gradient + icon raster.
+                 Solid neutral placeholder per user instruction — no fake illustrations. -->
+            <div class="survey-card__thumb" aria-hidden="true"></div>
+            <span class="glass-pill survey-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="survey-card__body">
+              <p class="survey-card__name">Featured Surv…</p>
+              <p class="survey-card__duration">6 min</p>
+              <p class="survey-card__reward">$1.25</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- 7. Offer Partners — Figma 13011:9858
+           3 × local Card with Logo Partners (Digital Turbine / BitLabs / Monlix) + "+50%" green boost badge.
+           [V1.1 candidate: "Offer Partner Card" component] -->
+      <section class="section" data-section="Offer Partners">
+        <div class="section__title">
+          <div class="section__title-left">
+            <span class="section__title-icon" style="color: var(--color-yellow-400);" aria-hidden="true">
+              <!-- Globe -->
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M2 12h20M12 2a15 15 0 010 20M12 2a15 15 0 000 20"/>
+              </svg>
+            </span>
+            <h2 class="section__title-text">Offer Partners</h2>
+          </div>
+          <a class="section__title-cta" href="#">
+            View all
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="9 18 15 12 9 6"/>
+            </svg>
+          </a>
+        </div>
+
+        <div class="row">
+          <article class="partner-card" data-partner="Digital Turbine">
+            <div class="partner-card__boost">+50%</div>
+            <!-- Logo Partners (Name=Digital Turbine) — Figma uses a vector logo asset.
+                 Solid neutral placeholder per user instruction — no fake brand marks. -->
+            <div class="partner-card__logo-area" aria-hidden="true"></div>
+            <span class="glass-pill partner-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="partner-card__body">
+              <p class="partner-card__name">Digital Turbine</p>
+              <p class="partner-card__reward">$1.25</p>
+            </div>
+          </article>
+
+          <article class="partner-card" data-partner="BitLabs">
+            <div class="partner-card__boost">+50%</div>
+            <!-- Logo Partners (Name=BitLabs) — Figma uses a vector logo asset.
+                 Solid neutral placeholder per user instruction — no fake brand marks. -->
+            <div class="partner-card__logo-area" aria-hidden="true"></div>
+            <span class="glass-pill partner-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="partner-card__body">
+              <p class="partner-card__name">BitLabs</p>
+              <p class="partner-card__reward">$1.25</p>
+            </div>
+          </article>
+
+          <article class="partner-card" data-partner="Monlix">
+            <!-- Logo Partners (Name=Monlix) — Figma uses a vector logo asset.
+                 Solid neutral placeholder per user instruction — no fake brand marks. -->
+            <div class="partner-card__logo-area" aria-hidden="true"></div>
+            <span class="glass-pill partner-card__rating" data-component="Rating container" data-variant="App Store">
+              <span class="glass-pill__play" aria-hidden="true">
+                <svg viewBox="0 0 12 12" fill="none"><path d="M2 1.5v9l8-4.5z" fill="#00D676"/></svg>
+              </span>
+              <span>4.5</span>
+              <span class="glass-pill__star">★</span>
+            </span>
+            <div class="partner-card__body">
+              <p class="partner-card__name">Monlix</p>
+              <p class="partner-card__reward">$1.25</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+    </div><!-- /.body -->
+
+    <!-- ============================================================
+         BOTTOM TABBAR — Figma 13011:9906 (componentId 13009:3065)
+         Item=Earn (selected), Show Home Indicator=true
+         components.md entry: "Bottom TabBar"; full spec in layouts.md.
+         ============================================================ -->
+    <nav class="tabbar" data-component="Bottom TabBar" data-item="Earn" aria-label="Primary">
+      <div class="tabbar__row">
+
+        <!-- Earn (SELECTED) -->
+        <a href="#" class="tabbar__tab" data-tab="Earn" aria-current="page">
+          <span class="tabbar__icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M13 2L4 14h6l-1 8 9-12h-6l1-8z"/>
+            </svg>
+          </span>
+          <span class="tabbar__label">Earn</span>
+        </a>
+
+        <!-- Deals -->
+        <a href="#" class="tabbar__tab" data-tab="Deals">
+          <span class="tabbar__icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/>
+              <circle cx="7" cy="7" r="1.5" fill="currentColor"/>
+            </svg>
+          </span>
+          <span class="tabbar__label">Deals</span>
+        </a>
+
+        <!-- My Offers -->
+        <a href="#" class="tabbar__tab" data-tab="My Offers">
+          <span class="tabbar__icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 11l3 3 8-8M20 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V6a2 2 0 012-2h11"/>
+            </svg>
+          </span>
+          <span class="tabbar__label">My Offers</span>
+        </a>
+
+        <!-- Cashout -->
+        <a href="#" class="tabbar__tab" data-tab="Cashout">
+          <span class="tabbar__icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 7H3V5a2 2 0 012-2h14a2 2 0 012 2v2z"/>
+              <path d="M21 7v12a2 2 0 01-2 2H5a2 2 0 01-2-2V7h18z"/>
+              <circle cx="17" cy="14" r="1.5" fill="currentColor"/>
+            </svg>
+          </span>
+          <span class="tabbar__label">Cashout</span>
+        </a>
+
+        <!-- Quests -->
+        <a href="#" class="tabbar__tab" data-tab="Quests">
+          <span class="tabbar__icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h4l2 3h10v13H4V4z"/>
+              <path d="M9 12l2 2 4-4"/>
+            </svg>
+          </span>
+          <span class="tabbar__label">Quests</span>
+        </a>
+
+      </div>
+
+      <!-- iOS Home Indicator — Figma 13011:9906;1184:6950 -->
+      <div class="tabbar__home-indicator" aria-hidden="true">
+        <div class="tabbar__home-indicator-bar"></div>
+      </div>
+    </nav>
+
+  </main>
+</body>
+</html>

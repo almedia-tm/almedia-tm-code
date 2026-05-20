@@ -9,8 +9,8 @@
     {
       "name": "almedia-code",
       "source": "./",
-      "description": "Token-optimized Claude Code bootstrap: 17 agents, 22 commands, 10 auto-routing skills, 5 output styles, 2 hooks.",
-      "version": "0.1.1",
+      "description": "Token-optimized Claude Code bootstrap: 17 agents, 22 commands, 11 auto-routing skills (incl. Freecash design system), 5 output styles, 2 hooks.",
+      "version": "0.2.0",
       "author": {
         "name": "Almedia",
         "email": "ai@almedia.co"
