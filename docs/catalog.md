@@ -50,7 +50,7 @@ Type these in Claude Code with the plugin namespace prefix: `/almedia-code:<name
 
 ### Workflow
 - **`/plan`** — Run plan agent. Emits dispatch matrix. WAITS for user confirm before any code.
-- **`/plan-execute`** — Plan + content-aware parallel agent dispatch. Auto-bootstraps `CLAUDE.md` + `.claude/` on new projects, then fans out reviewers/testers in dependency-aware batches.
+- **`/plan-execute`** — **Standard command for any non-trivial change** (new project, new feature, modification to existing feature, refactor). Plans the work, auto-bootstraps `CLAUDE.md` + `.claude/` on new projects, fans out reviewers/testers in dependency-aware parallel batches with a strict **Review → Fix → Docs** flow. Pass `--team` for inter-reviewer debate via Agent Teams (experimental, opt-in).
 - **`/tdd`** — RED → GREEN → REFACTOR.
 - **`/orchestrate`** — Sequential agent workflow (feature/bugfix/refactor/security).
 - **`/multi-frontend`** — Parallel agents for large UI/UX work (pre-baked frontend roles).
@@ -116,6 +116,17 @@ Detailed style guides: [docs/styles.md](styles.md)
 |---|---|---|
 | `style-activate` | SessionStart | Reads `~/.claude/.style-active` and injects the matching style into every session. < 50 ms cold start. |
 | `codemap-nudge` | PreToolUse on Bash grep/find | If `docs/codemaps/` exists, nudges Claude to read the codemap before grepping. |
+
+---
+
+## Shared principles
+
+Single source of truth for cross-agent rules. Each reviewer and the `/plan-execute` Implement (B2) and Fix (B4) phases reference these.
+
+| Principle | Applies to | Summary |
+|---|---|---|
+| [surgical-edits](principles/surgical-edits.md) | reviewers + main session + every code-modifying agent | Minimum-diff fixes. ≤ 30 lines for a bug fix. Stop and ask above threshold. One concern per finding. No opportunistic refactors. |
+| [readability](principles/readability.md) | all language reviewers | R1: switch over else-if ladders · R2: guard clauses · R3: booleans for truth · R4: no magic literals · R5: one-thing functions · R6: side effects at edges · R7: no orphan TODOs / commented-out code · R8: drop `else` after return. DRY = Rule of 3. |
 
 ---
 

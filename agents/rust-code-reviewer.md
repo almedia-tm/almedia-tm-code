@@ -92,6 +92,33 @@ When you're about to recommend "extract this to a helper" or "split this functio
 3. If the existing helper is close but not exact, prefer adding a generic parameter, an `impl Into<T>` argument, or a builder method over creating a sibling.
 4. Only recommend creating a brand-new function when nothing existing fits. State explicitly in the recommendation that you searched and found no match.
 
+## Readability — universal rules (R1–R8 + DRY)
+
+Enforce the shared rules in [docs/principles/readability.md](../docs/principles/readability.md). Tag each finding with the rule ID:
+
+| ID | Severity | Rust-specific cue |
+|---|---|---|
+| **R1** | High | 3+ `else if` / `if let / else if let` chains on one value → `match` arms |
+| **R2** | High | Nested `if let Some(x) = ... { if let Some(y) = ... { ... } }` → `let ... else` guards or `?` |
+| **R3** | High | `not_ready`, `no_error`, `!is_disabled` → name booleans for truth |
+| **R4** | High | Bare literals in conditions → `const` / `enum` variant |
+| **R5** | Medium | Function mixes `reqwest` + `serde_json` + biz-logic + DB → split by abstraction level |
+| **R6** | Medium | I/O scattered inside pure logic → push to edges; pure funcs in the middle (also easier to `#[test]`) |
+| **R7** | Medium | `// TODO` without an issue ref; commented-out code blocks |
+| **R8** | Medium | `if cond { return Err(...); } else { ok() }` → drop the `else` |
+| **DRY** | Medium | Rule of 3 — extract on third duplication, not second |
+
+## Surgical edits — your suggested fixes must themselves be small
+
+Every suggested fix MUST follow [docs/principles/surgical-edits.md](../docs/principles/surgical-edits.md):
+
+- If the smallest viable fix is **≤ 30 lines**, propose it inline in the finding.
+- If the smallest viable fix is **> 30 lines**, do NOT paste a giant code block. Instead, describe the change in 2–3 sentences and append `Suggest: discuss before implementing — fix likely > 30 lines`.
+- One finding = one concern. Do not chain unrelated improvements ("fix the unwrap AND restructure the trait impl AND rename the lifetime") into one item — each gets its own line.
+- Never recommend reformatting or restructuring lines the change set didn't already touch.
+
+Treat any suggested fix that fails these thresholds as a finding against your own review — drop or split it.
+
 ## Diagnostic command block
 
 ```bash
