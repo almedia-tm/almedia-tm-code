@@ -65,7 +65,7 @@ PARALLEL AGENTS:
 ### B2 — Implementation (serial, main session)
 Main session implements Phase tasks in order. No agent fan-out here.
 
-### B3 — Post-implementation (parallel)
+### B3 — Review (parallel)
 - ts-code-reviewer — "[only if Touches includes ts]"
 - python-code-reviewer — "[only if Touches includes py]"
 - go-code-reviewer — "[only if Touches includes go]"
@@ -73,15 +73,32 @@ Main session implements Phase tasks in order. No agent fan-out here.
 - security-reviewer — "[only if Touches includes auth | payments | user-data]"
 - silent-failure-hunter — "Scan diffs for swallowed errors"
 - e2e — "[only if Touches includes ui and a new flow exists]"
+
+### B4 — Fix (serial, main session)
+Main session applies fixes for ALL findings at severity **Critical, High, Medium, and Low** from B3 reviewers. Nitpicks and pure style preferences may be skipped.
+
+Fixes MUST be **surgical** per [docs/principles/surgical-edits.md](../docs/principles/surgical-edits.md):
+- Minimum-diff fixes (≤ 30 lines for a bug fix).
+- If a fix would touch more than 30 lines, stop and surface to the user before applying.
+- One fix per finding. Do not opportunistically refactor adjacent code.
+
+After all in-scope fixes are applied, re-run the relevant reviewer agents from B3 to confirm the findings are closed before advancing to B5.
+
+### B5 — Docs (parallel)
+Only runs after B4 confirms no in-scope findings remain.
 - codemap — "Refresh /docs/codemaps/ for changed modules"
+- (optional) update-docs — "Sync any other docs referencing the changed code"
 ```
 
 ## Rules
 
 - **YAGNI** — only plan what the stated goal needs.
+- **Simple and scalable** — prefer the smallest design that solves the stated problem. Don't introduce abstractions, frameworks, or services that aren't required to ship.
 - Max 3 phases for features, max 5 for new projects.
 - Each task completable in one focused session.
 - Any task touching auth/payments/user data MUST add `security-reviewer` to B3.
 - Only emit reviewer agents in B3 whose language/domain actually appears in the plan — don't fan out agents that have nothing to review.
+- B5 (Docs) MUST run after B4 (Fix). Never emit docs before reviews are closed.
+- All fixes in B4 follow [docs/principles/surgical-edits.md](../docs/principles/surgical-edits.md) — minimum-diff, no opportunistic refactors.
 - Do not write any code yourself — planning only.
 - After emitting the matrix, **WAIT for user confirmation** before `/plan-execute` (or any other command) acts on it.

@@ -83,6 +83,33 @@ When you're about to recommend "extract this to a helper" or "split this functio
 3. If the existing helper is close but not exact, prefer adding a parameter or option-struct field over creating a sibling. For Go, a functional-options pattern (`WithX`, `WithY`) is often the right vehicle.
 4. Only recommend creating a brand-new function when nothing existing fits. State explicitly in the recommendation that you searched and found no match.
 
+## Readability — universal rules (R1–R8 + DRY)
+
+Enforce the shared rules in [docs/principles/readability.md](../docs/principles/readability.md). Tag each finding with the rule ID:
+
+| ID | Severity | Go-specific cue |
+|---|---|---|
+| **R1** | High | 3+ `else if` on a single value → `switch` (with or without a tag expression) |
+| **R2** | High | Nested `if x != nil { if y != nil { ... } }` → guard clauses with early `return err` |
+| **R3** | High | `notReady`, `noError`, `!isInvalid` → name booleans for truth |
+| **R4** | High | Bare literals in conditions → typed const / `iota` enum block |
+| **R5** | Medium | Function mixes `http.*` + `json.Unmarshal` + biz-logic + `db.*` → split by abstraction level |
+| **R6** | Medium | `db.Query` / `http.Post` interleaved with decision logic → keep pure funcs in core, I/O at handlers |
+| **R7** | Medium | `// TODO` without an issue ref; commented-out code blocks |
+| **R8** | Medium | `if err != nil { return err } else { ... }` → drop the `else` |
+| **DRY** | Medium | Rule of 3 — extract on third duplication, not second |
+
+## Surgical edits — your suggested fixes must themselves be small
+
+Every suggested fix MUST follow [docs/principles/surgical-edits.md](../docs/principles/surgical-edits.md):
+
+- If the smallest viable fix is **≤ 30 lines**, propose it inline in the finding.
+- If the smallest viable fix is **> 30 lines**, do NOT paste a giant code block. Instead, describe the change in 2–3 sentences and append `Suggest: discuss before implementing — fix likely > 30 lines`.
+- One finding = one concern. Do not chain unrelated improvements ("fix the unchecked error AND rename the var AND extract a helper") into one item — each gets its own line.
+- Never recommend reformatting or restructuring lines the change set didn't already touch.
+
+Treat any suggested fix that fails these thresholds as a finding against your own review — drop or split it.
+
 ## Diagnostic command block
 
 ```bash

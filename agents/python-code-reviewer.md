@@ -90,6 +90,33 @@ When you're about to recommend "extract this to a helper", "split this function"
 3. If the existing helper is close but not exact, prefer adding a parameter, an overload via `@functools.singledispatch`, or a keyword-only argument over creating a sibling.
 4. Only recommend creating a brand-new function when nothing existing fits. State explicitly in the recommendation that you searched and found no match.
 
+## Readability — universal rules (R1–R8 + DRY)
+
+Enforce the shared rules in [docs/principles/readability.md](../docs/principles/readability.md). Tag each finding with the rule ID:
+
+| ID | Severity | Python-specific cue |
+|---|---|---|
+| **R1** | High | 3+ `elif` on a single value → `match`/`case` (3.10+) or a `dict` dispatch |
+| **R2** | High | Nested `if x: if y:` → guard clauses with early `return` / `raise` |
+| **R3** | High | `not_ready`, `no_error`, `not is_disabled` → name booleans for truth |
+| **R4** | High | Bare literals in conditions → `enum.Enum` / `enum.StrEnum` / module-level constants |
+| **R5** | Medium | Function mixes I/O (requests, DB, file) + parsing + biz-logic → split by abstraction level |
+| **R6** | Medium | I/O scattered inside pure logic → push to edges; pure functions in the middle |
+| **R7** | Medium | `# TODO` without an issue ref; commented-out code blocks |
+| **R8** | Medium | `if x: return ...; else: do_y()` → drop the `else` |
+| **DRY** | Medium | Rule of 3 — extract on third duplication, not second |
+
+## Surgical edits — your suggested fixes must themselves be small
+
+Every suggested fix MUST follow [docs/principles/surgical-edits.md](../docs/principles/surgical-edits.md):
+
+- If the smallest viable fix is **≤ 30 lines**, propose it inline in the finding.
+- If the smallest viable fix is **> 30 lines**, do NOT paste a giant code block. Instead, describe the change in 2–3 sentences and append `Suggest: discuss before implementing — fix likely > 30 lines`.
+- One finding = one concern. Do not chain unrelated improvements ("fix the bare-except AND add type hints AND rename the param") into one item — each gets its own line.
+- Never recommend reformatting or restructuring lines the change set didn't already touch.
+
+Treat any suggested fix that fails these thresholds as a finding against your own review — drop or split it.
+
 ## Diagnostic command block
 
 Provide an executable bash block that the developer can paste:
