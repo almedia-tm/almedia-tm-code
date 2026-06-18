@@ -1,0 +1,5 @@
+# Shelf skill — built but intentionally NOT distributed (keep local)
+skills/almedia-reporter/
+
+# Regenerable skill bundle artifacts (zips), not source
+*.skill

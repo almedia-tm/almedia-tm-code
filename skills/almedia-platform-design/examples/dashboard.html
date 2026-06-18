@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Almedia Platform — Dashboard (prototype)</title>
+<!-- Skill test artifact: themed entirely from skills/almedia-platform-design/tokens.md -->
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@350;400;500;600&family=Lusitana:wght@400;700&display=swap" rel="stylesheet" />
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          primary: { DEFAULT: '#0021F3', foreground: '#FFFFFF', hover: '#334AFF' },
+          secondary: { DEFAULT: '#0D2A4C', foreground: '#FFFFFF', hover: '#26476A' },
+          success: '#158034', warning: '#f6d842', danger: '#f64260',
+          bgPrimary: '#FFFFFF', bgSecondary: '#F8F8F8',
+          stroke: '#E4E4E4', textPrimary: '#101820', textSecondary: '#7D7D7D',
+          primaryText: '#172554', linkBlue: '#3962FF',
+          lightGray: '#F7F8F8', cloudGray: '#EDEDF1', concreteGray: '#D8DAE0',
+          placeboBlue: '#EEF3FF', lightBlue: '#E3EDFF',
+          lightGreen: '#DCF2D2', skyAlmediaBlue: '#739AC1',
+        },
+        fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Lusitana', 'serif'] },
+        fontWeight: { normal: '350' },
+        fontSize: { xs:'10px', sm:'12px', base:'14px', lg:'16px', xl:'18px', '2xl':'22px', '3xl':'28px', '4xl':'40px' },
+        borderRadius: { lg:'8px', md:'6px', sm:'4px' },
+      },
+    },
+  }
+</script>
+<style> body { font-family:'Inter',sans-serif; font-weight:350; } </style>
+</head>
+<body class="bg-bgSecondary text-textPrimary text-base">
+<div class="flex min-h-screen">
+
+  <!-- Sidebar (Midnight) -->
+  <aside class="w-60 shrink-0 bg-secondary text-secondary-foreground flex flex-col">
+    <div class="h-16 flex items-center gap-2 px-5 border-b border-white/10">
+      <span class="inline-flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground text-sm font-semibold">A</span>
+      <span class="text-lg" style="font-weight:500">Almedia</span>
+    </div>
+    <nav class="flex-1 px-3 py-4 space-y-1 text-sm">
+      <a class="flex items-center gap-3 px-3 py-2 rounded-md bg-white/10 text-white" href="#">▦ Dashboard</a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-md text-white/70 hover:bg-white/5 hover:text-white" href="#">◆ Brands</a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-md text-white/70 hover:bg-white/5 hover:text-white" href="#">↗ Campaigns</a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-md text-white/70 hover:bg-white/5 hover:text-white" href="#">⇧ Growth</a>
+      <a class="flex items-center gap-3 px-3 py-2 rounded-md text-white/70 hover:bg-white/5 hover:text-white" href="#">⚙ Settings</a>
+    </nav>
+    <div class="px-5 py-4 text-xs text-white/50">v2025.6 · prototype</div>
+  </aside>
+
+  <!-- Main -->
+  <div class="flex-1 flex flex-col">
+
+    <!-- Header -->
+    <header class="h-16 bg-bgPrimary border-b border-stroke flex items-center justify-between px-6">
+      <h1 class="text-xl" style="font-weight:500">Dashboard</h1>
+      <div class="flex items-center gap-3">
+        <div class="hidden sm:flex items-center gap-2 h-9 px-3 rounded-lg border border-stroke bg-lightGray text-textSecondary text-sm">
+          <span>⌕</span><input class="bg-transparent outline-none placeholder:text-textSecondary" placeholder="Search brands…" />
+        </div>
+        <button class="h-9 px-4 rounded-lg bg-primary hover:bg-primary-hover text-primary-foreground text-sm transition-colors" style="font-weight:500">+ New campaign</button>
+        <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-placeboBlue text-primary text-sm" style="font-weight:500">PD</span>
+      </div>
+    </header>
+
+    <main class="p-6 space-y-6">
+
+      <!-- Stat cards -->
+      <section class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+        <!-- card -->
+        <div class="bg-bgPrimary border border-stroke rounded-lg p-5">
+          <div class="text-sm text-textSecondary">Active brands</div>
+          <div class="mt-2 text-3xl" style="font-weight:500">128</div>
+          <div class="mt-1 text-xs text-success">▲ 6 this week</div>
+        </div>
+        <div class="bg-bgPrimary border border-stroke rounded-lg p-5">
+          <div class="text-sm text-textSecondary">Spend (7d)</div>
+          <div class="mt-2 text-3xl" style="font-weight:500">$84.2k</div>
+          <div class="mt-1 text-xs text-success">▲ 12.4%</div>
+        </div>
+        <div class="bg-bgPrimary border border-stroke rounded-lg p-5">
+          <div class="text-sm text-textSecondary">Conversions</div>
+          <div class="mt-2 text-3xl" style="font-weight:500">19,304</div>
+          <div class="mt-1 text-xs text-textSecondary">▲ 3.1%</div>
+        </div>
+        <div class="bg-bgPrimary border border-stroke rounded-lg p-5">
+          <div class="text-sm text-textSecondary">Payout ratio</div>
+          <div class="mt-2 text-3xl" style="font-weight:500">41.7%</div>
+          <div class="mt-1 text-xs text-danger">▲ above 43% target soon</div>
+        </div>
+      </section>
+
+      <!-- Table card -->
+      <section class="bg-bgPrimary border border-stroke rounded-lg overflow-hidden">
+        <div class="flex items-center justify-between px-5 py-4 border-b border-stroke">
+          <h2 class="text-lg" style="font-weight:500">Top brands</h2>
+          <div class="flex gap-2">
+            <button class="h-8 px-3 rounded-md border border-stroke text-sm text-textSecondary hover:bg-lightGray">Filter</button>
+            <button class="h-8 px-3 rounded-md bg-secondary hover:bg-secondary-hover text-secondary-foreground text-sm transition-colors">Export</button>
+          </div>
+        </div>
+        <table class="w-full text-sm">
+          <thead>
+            <tr class="text-left text-textSecondary border-b border-stroke">
+              <th class="font-normal px-5 py-3">Brand</th>
+              <th class="font-normal px-5 py-3">Platform</th>
+              <th class="font-normal px-5 py-3">Country</th>
+              <th class="font-normal px-5 py-3">Spend</th>
+              <th class="font-normal px-5 py-3">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- row -->
+            <tr class="border-b border-stroke last:border-0 hover:bg-lightGray">
+              <td class="px-5 py-3 flex items-center gap-3">
+                <span class="inline-flex h-7 w-7 items-center justify-center rounded-md bg-placeboBlue text-primary text-xs" style="font-weight:600">CV</span>
+                CoinVault
+              </td>
+              <td class="px-5 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-sm bg-lightBlue text-primaryText text-xs">iOS</span></td>
+              <td class="px-5 py-3 text-textSecondary">🇺🇸 United States</td>
+              <td class="px-5 py-3">$23,410</td>
+              <td class="px-5 py-3"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm bg-lightGreen text-success text-xs">● Live</span></td>
+            </tr>
+            <tr class="border-b border-stroke last:border-0 hover:bg-lightGray">
+              <td class="px-5 py-3 flex items-center gap-3">
+                <span class="inline-flex h-7 w-7 items-center justify-center rounded-md bg-cloudGray text-textPrimary text-xs" style="font-weight:600">PP</span>
+                PrizePlay
+              </td>
+              <td class="px-5 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-sm bg-cloudGray text-textPrimary text-xs">Android</span></td>
+              <td class="px-5 py-3 text-textSecondary">🇩🇪 Germany</td>
+              <td class="px-5 py-3">$18,920</td>
+              <td class="px-5 py-3"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm bg-warning/20 text-[#8a6d00] text-xs">● Review</span></td>
+            </tr>
+            <tr class="hover:bg-lightGray">
+              <td class="px-5 py-3 flex items-center gap-3">
+                <span class="inline-flex h-7 w-7 items-center justify-center rounded-md bg-placeboBlue text-primary text-xs" style="font-weight:600">SW</span>
+                SwagWallet
+              </td>
+              <td class="px-5 py-3"><span class="inline-flex items-center px-2 py-0.5 rounded-sm bg-lightBlue text-primaryText text-xs">Web</span></td>
+              <td class="px-5 py-3 text-textSecondary">🇬🇧 United Kingdom</td>
+              <td class="px-5 py-3">$11,067</td>
+              <td class="px-5 py-3"><span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-sm bg-danger/15 text-danger text-xs">● Paused</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+    </main>
+  </div>
+</div>
+</body>
+</html>

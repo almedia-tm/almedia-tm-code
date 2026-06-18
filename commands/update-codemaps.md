@@ -22,6 +22,32 @@ Create or update codemaps in `docs/codemaps/`:
 | `data.md` | Database tables, relationships, migration history |
 | `dependencies.md` | External services, third-party integrations, shared libraries |
 
+### Diagrams (REQUIRED — Mermaid, not ASCII)
+Every codemap that describes structure or flow MUST include at least one **Mermaid** diagram in a ```mermaid fenced block``` (GitHub/most viewers render it). ASCII art is not allowed for these. Use the right diagram type per file:
+
+| File | Required Mermaid diagram |
+|------|--------------------------|
+| `architecture.md` | **Container view (C4 Level 2)** — the single best overview: every runnable/deployable unit (web app, API/service, workers/cron), datastores, and external systems, inside a system boundary, with labeled interactions (protocol/purpose). NOT internal classes/functions. |
+| `backend.md` | `flowchart LR` — request lifecycle (route → controller → service → repo → store) |
+| `frontend.md` | `graph TD` — page/route tree → component hierarchy |
+| `data.md` | `erDiagram` — tables + relationships |
+| `dependencies.md` | `flowchart LR` — app → external services/integrations |
+
+Example (`architecture.md` — **container view**: each node is a runnable container or datastore, external systems sit outside the boundary, edges are labeled interactions):
+```mermaid
+flowchart TD
+  user([User]) -->|HTTPS| web["Web App — Next.js"]
+  subgraph sys[System boundary]
+    web -->|REST / JSON| api["API Service — Node"]
+    api --> db[("Postgres")]
+    api --> cache[("Redis")]
+    worker["Worker — queue / cron"] --> db
+  end
+  api -->|charge| stripe[Stripe]
+  worker -->|errors / metrics| sentry[Sentry]
+```
+(Prefer Mermaid's native `C4Container` syntax if your renderer supports it; otherwise use the labeled `flowchart` + `subgraph` boundary above — it renders everywhere.)
+
 ### Codemap Format
 Each codemap should be token-lean — optimized for AI context consumption:
 
@@ -64,7 +90,7 @@ Write a summary to `.reports/codemap-diff.txt`:
 - Focus on **high-level structure**, not implementation details
 - Prefer **file paths and function signatures** over full code blocks
 - Keep each codemap under **1000 tokens** for efficient context loading
-- Use ASCII diagrams for data flow instead of verbose descriptions
+- Use **Mermaid** diagrams (```mermaid blocks) for all structure/data-flow — never ASCII art (see "Diagrams (REQUIRED)" above)
 - Run after major feature additions or refactoring sessions
 
 Invokes the `codemap` agent.

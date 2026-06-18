@@ -46,6 +46,19 @@ src/
 | Module | Owns | Exposes | Depends on |
 |--------|------|---------|------------|
 
+## Architecture Diagram (REQUIRED — Mermaid, container view)
+Always include a Mermaid **container view (C4 Level 2)** in a ```mermaid fenced block``` (never ASCII): the runnable/deployable units (web app, API/service, workers), datastores, and external systems inside a system boundary, with labeled interactions. This is the one-glance map of the whole system — not internal classes/functions. Edges show direction + protocol/purpose; no cycles between containers.
+```mermaid
+flowchart TD
+  user([User]) -->|HTTPS| web["Web App — Next.js"]
+  subgraph sys[System boundary]
+    web -->|REST / JSON| api["API Service"]
+    api --> db[("Postgres")]
+    worker["Worker — queue / cron"] --> db
+  end
+  api -->|charge| stripe[Stripe]
+```
+
 ## Naming Conventions
 - Files: kebab-case (e.g. user-profile.ts)
 - Components: PascalCase (e.g. UserProfile.tsx)
