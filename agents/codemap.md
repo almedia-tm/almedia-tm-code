@@ -17,6 +17,18 @@ You are a codebase documentation specialist. You maintain codemaps — living do
 ## Modules
 | Module | Path | Purpose |
 |--------|------|---------|
+
+## Architecture
+(REQUIRED) A Mermaid **container view (C4 Level 2)** in a ```mermaid fenced block``` — runnable/deployable units + datastores + external systems inside a system boundary, with labeled interactions. The one-glance map of the whole system:
+```mermaid
+flowchart TD
+  user([User]) -->|HTTPS| web["Web App"]
+  subgraph sys[System boundary]
+    web -->|REST| api["API Service"]
+    api --> db[("Postgres")]
+  end
+  api -->|charge| stripe[Stripe]
+```
 ```
 
 ### Folder-level codemap (`/docs/codemaps/<module>/README.md`):
