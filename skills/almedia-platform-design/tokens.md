@@ -1,7 +1,6 @@
 # Almedia Platform — Design Tokens
 
-Extracted from `advertiser-platform/frontend/tailwind.config.ts` + `global.css` + `app/ui/global.css`.
-Refresh by re-reading those files. (Config carries a note: color names should be refactored to e.g. `primary.blue` — names below are the current Tailwind keys.)
+Concrete, self-contained values — **no repo needed.** (Originally derived from `tailwind.config.ts` + `global.css`; maintainers with repo access may cross-check, but that's highly optional. The config carries a note that color names should be refactored to e.g. `primary.blue` — names below are the current Tailwind keys.)
 
 ## Brand
 | Token | Hex | Tailwind key |
