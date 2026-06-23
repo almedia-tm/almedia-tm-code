@@ -1,6 +1,6 @@
 {
   "name": "@almedia-tm/almedia-code",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "description": "Opinionated, token-optimized Claude Code bootstrap with curated agents, slash commands, skills, output styles, and optional memory/compression layers.",
   "license": "SEE LICENSE IN LICENSE",
   "author": "Almedia <ai@almedia.co>",

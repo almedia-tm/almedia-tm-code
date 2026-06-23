@@ -10,7 +10,7 @@ You are a TypeScript code reviewer. You review for quality, correctness, and sta
 ### Critical (block commit until fixed):
 - [ ] `any` type used — replace with `unknown` and narrow, or a specific type
 - [ ] Object mutation — functions must return new copies, never modify inputs
-- [ ] Unhandled errors — every `async` operation needs try/catch or `.catch()`
+- [ ] Mis-handled errors — each `async` operation must either (a) handle a *recoverable* error meaningfully, or (b) let an *unrecoverable* one propagate (re-throw with context, or `.catch()` that re-throws). Do NOT force a try/catch around every `await`: errors that *should* be failures (corrupt state, programmer error, unexpected input) must surface, not be wrapped and defaulted. A catch that swallows an error into a value the caller can't distinguish from success is itself a Critical finding (cf. `silent-failure-hunter`)
 - [ ] Hardcoded values (strings, numbers, URLs) — move to constants or env vars
 - [ ] `console.log` present — remove all from production code
 - [ ] Function over 50 lines — must be split
