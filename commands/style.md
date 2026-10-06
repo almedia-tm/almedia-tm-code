@@ -10,15 +10,17 @@ Switch the active output style. The choice persists across sessions via `~/.clau
 `/style <profile>`
 
 ## Available Profiles
-- `rigor` — Question requirements, surface assumptions, terse pointer-style output
-- `caveman` — Compressed cave-speak for max token savings
-- `teacher` — Verbose explanations, walks reasoning
-- `executive` — TL;DR + Why this matters + details
-- `default` — No style injection (vanilla Claude Code)
+- `rigor`: Question requirements, state assumptions, terse pointer-style output
+- `devil`: Challenges your technical choices, forces tradeoff thinking
+- `caveman`: Compressed cave-speak for max token savings
+- `teacher`: Verbose explanations, walks reasoning
+- `executive`: TL;DR + Why this matters + details
+- `default`: No style injection (vanilla Claude Code)
 
 ## Examples
 ```bash
 /style rigor       # Set rigor as default
+/style devil       # Challenge my technical choices
 /style executive   # Switch to executive
 /style default     # Disable style injection
 /style             # Show current style
@@ -32,7 +34,7 @@ const path = require('path');
 const os = require('os');
 const flag = path.join(os.homedir(), '.claude', '.style-active');
 const arg = process.argv[1];
-const valid = ['rigor', 'caveman', 'teacher', 'executive', 'default'];
+const valid = ['rigor', 'devil', 'caveman', 'teacher', 'executive', 'default'];
 
 if (!arg) {
   if (fs.existsSync(flag)) {

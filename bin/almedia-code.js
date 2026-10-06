@@ -31,7 +31,7 @@ Usage:
 
 Commands:
   init                       First-time setup
-    --style <name>           Skip wizard, set style directly (rigor|caveman|teacher|executive|default)
+    --style <name>           Skip wizard, set style directly (rigor|devil|caveman|teacher|executive|default)
     --with-memory            Install claude-mem (AGPL — uses Anthropic API tokens for compression)
     --with-shrink            Install caveman-shrink MCP for input-token compression
     --no-tour                Skip the 30-second tour

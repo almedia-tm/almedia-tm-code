@@ -66,7 +66,7 @@ Type these in Claude Code with the plugin namespace prefix: `/almedia-code:<name
 - **`/sessions`** — List recent Claude Code sessions.
 
 ### Configuration
-- **`/style`** — Switch active style (rigor/caveman/teacher/executive/default).
+- **`/style`**: Switch active style (rigor/devil/caveman/teacher/executive/default).
 - **`/style-copy`** — Print active style for paste into Desktop/Web/Mobile.
 - **`/harness-audit`** — Score your Claude Code config across 7 dimensions.
 - **`/model-route`** — Recommend model tier (haiku/sonnet/opus) for current task.
@@ -74,7 +74,7 @@ Type these in Claude Code with the plugin namespace prefix: `/almedia-code:<name
 
 ---
 
-## Auto-routing skills (11)
+## Auto-routing skills (13)
 
 Skills auto-trigger based on what you say to Claude. You don't invoke them directly — Claude picks them.
 
@@ -91,19 +91,22 @@ Skills auto-trigger based on what you say to Claude. You don't invoke them direc
 | `db-change` | new migration, schema diff | Routes to `db-reviewer` |
 | `security-check` | auth/payment/webhook code | Routes to `security-reviewer` |
 | `freecash-design` | "design X", "mock up Y", "Freecash" + UI intent | Renders Freecash-accurate HTML/React against `tokens.md` + `components.md` + `layouts.md` + reference screens |
+| `almedia-platform-design` | "design X for the advertiser platform", Almedia platform UI intent | Builds platform-accurate HTML/React against cached tokens + components (Figma is the source of truth) |
+| `container-diagram` | "what would the architecture look like for X", ideate or sketch a system | C4 container-view Mermaid diagram + shareable rendered link + legend |
 
 ---
 
-## Output styles (5)
+## Output styles (6)
 
 Pick once, persistent across sessions via `~/.claude/.style-active`. Switch with `/style <name>`.
 
 | Style | When to use |
 |---|---|
-| `rigor` | You want Claude to question requirements and surface assumptions before implementing. Terse output. |
+| `rigor` | You want Claude to question requirements, state assumptions, and show evidence at every fork before implementing. Terse output. |
 | `caveman` | You're token-budget-constrained and OK with cave-speak (50-70% output token reduction). |
 | `teacher` | You're learning the topic and want walkthroughs. |
 | `executive` | You want decisions first, details on demand. |
+| `devil` | You want Claude to challenge your technical choices, disagree where warranted, and force tradeoff analysis. |
 | `default` | Vanilla Claude Code. No style injection. |
 
 Detailed style guides: [docs/styles.md](styles.md)
@@ -147,5 +150,6 @@ Both off by default. Enable during `init` or via `npx @almedia-tm/almedia-code i
 - **Database / backend engineers**: `db-reviewer`, `security-reviewer`, `/multi-backend`.
 - **Frontend engineers**: `/multi-frontend`, `e2e`, `/update-codemaps`.
 - **Designers / frontend on Freecash surfaces**: the `freecash-design` skill auto-triggers on design intent and renders Freecash-accurate HTML/React using the embedded tokens, components, and layout system.
+- **Advertiser platform designers**: the `almedia-platform-design` skill auto-triggers on platform UI intent and builds from the cached token and component reference.
 - **Non-technical users / writers / PMs**: pick the `executive` or `teacher` style. The agents and commands are still useful for code-adjacent work; the style takes the technical jargon out of the conversation.
 - **Cost-conscious users**: enable `caveman-shrink`, switch to `caveman` style for max savings.

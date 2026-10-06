@@ -1,6 +1,6 @@
 # Output Styles — Detailed Guide
 
-`almedia-code` ships 5 output styles. The active style is set via `/style <name>` and persists in `~/.claude/.style-active`. The `style-activate` SessionStart hook injects the corresponding style markdown into every new session.
+`almedia-code` ships 6 output styles. The active style is set via `/style <name>` and persists in `~/.claude/.style-active`. The `style-activate` SessionStart hook injects the corresponding style markdown into every new session.
 
 ---
 
@@ -10,14 +10,37 @@
 
 **Behavior:**
 - Asks clarifying questions before implementing.
-- Numbers and surfaces assumptions explicitly. Waits for confirmation.
-- For design tasks: visualizes (ASCII diagrams, mockups, file-tree previews) before code.
-- Output is bullet-style, terse, no preamble.
+- Numbers and states assumptions explicitly. Waits for confirmation.
+- Restates the ask plus the exact files to touch before any substantive edit.
+- Every fork carries its reasoning: the evidence that created it, what breaks under each option, then the recommendation.
+- Traces every change through its dependents: callers, docs, and counts.
+- Reads live state before asserting how anything behaves.
+- Output is bullet-style, terse, no preamble. No em dashes. No AI-tell words (the full list lives in the style file).
 
 **Example output:**
 > 1. Assumption: you want this in TypeScript, not Python. Confirm?
 > 2. Trade-off: this can be a server action OR a route handler. Server action is simpler; route handler is reusable from external clients. Which?
 > 3. Open question: where does the auth check live — middleware or inside the action?
+
+---
+
+## devil
+
+**Use when:** You want Claude to disagree with you, challenge your technical choices, and force tradeoff thinking before a decision.
+
+**Behavior:**
+- Treats proposals as claims to test, not orders to echo. Tests load-bearing assumptions.
+- Disagrees where the evidence says so. Pushes back on decisions, plans, claims, and scope. Never on style. Never relitigates declined ideas.
+- Forces tradeoffs into the open: what is gained, what breaks, the cheaper reading.
+- Names your implied mental model: where it holds, where it does not.
+- Asks the better question when you are asking the wrong one. One sharp question beats a lecture.
+- Output is terse: question first, evidence second, recommendation last.
+
+**Example output:**
+> Your plan: cache the config in Redis.
+> Disagree: the config changes twice a year and only dev reads it per request. What problem does Redis solve here?
+> Cheaper reading: a module-scope map with a file watch. Tradeoff: no cross-process invalidation, which you do not have anyway.
+> The model you are using: cache invalidation is hard, so outsource it. It holds when processes share state; it does not here.
 
 ---
 
@@ -70,7 +93,7 @@
 
 Want your own style? Author a markdown file at `~/.claude/plugins/cache/almedia-code/almedia-code/<version>/styles/<your-name>.md`. The format is loose — anything you write becomes the SessionStart context.
 
-Note: custom styles are not (yet) automatically picked up by `/style`. Edit the `VALID` list in `bin/almedia-code.js` and the `style.md` slash command. v1.1 will support per-user style files in `~/.claude/styles/` directly.
+Note: custom styles are not (yet) automatically picked up by `/style`. Edit the `VALID` list in `scripts/lib/style-cmd.js` and the `style.md` slash command. v1.1 will support per-user style files in `~/.claude/styles/` directly.
 
 ---
 

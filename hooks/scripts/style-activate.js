@@ -42,7 +42,7 @@ function main() {
     return;
   }
 
-  const valid = ['rigor', 'caveman', 'teacher', 'executive', 'default'];
+  const valid = ['rigor', 'devil', 'caveman', 'teacher', 'executive', 'default'];
   if (!valid.includes(style)) {
     // Unknown style — silently degrade to default
     emit({});

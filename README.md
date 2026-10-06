@@ -1,6 +1,6 @@
 # almedia-code
 
-> Token-optimized Claude Code bootstrap: 17 agents, 23 commands (incl. `/plan-execute` Review → Fix → Docs flow with `--team` mode), 13 skills (incl. Freecash design system), 5 output styles, 2 hooks. Reviewers enforce surgical-edits + readability principles.
+> Token-optimized Claude Code bootstrap: 17 agents, 23 commands (incl. `/plan-execute` Review → Fix → Docs flow with `--team` mode), 13 skills (incl. Freecash + Almedia platform design systems), 6 output styles, 2 hooks. Reviewers enforce surgical-edits + readability principles.
 
 Built for technical and non-technical users who want a working Claude Code setup without the bloat.
 
@@ -27,8 +27,8 @@ That's it. The installer:
 |---|---|---|
 | Agents | 17 | Specialized assistants you invoke for review, debug, plan, build-fix, etc. |
 | Slash commands | 23 | One-keystroke workflows (`/plan`, `/plan-execute`, `/tdd`, `/code-review`, …) |
-| Skills | 11 | Auto-routing wrappers — Claude picks the right tool based on what you ask (incl. `freecash-design`) |
-| Output styles | 5 | Choose how Claude talks to you: rigor, caveman, teacher, executive, default |
+| Skills | 13 | Auto-routing wrappers: Claude picks the right tool based on what you ask (incl. `freecash-design`, `almedia-platform-design`) |
+| Output styles | 6 | Choose how Claude talks to you: rigor, devil, caveman, teacher, executive, default |
 | Hooks | 2 | Style activator + codemap nudge — both Node, both fast |
 
 Full catalog with descriptions: [docs/catalog.md](docs/catalog.md)
@@ -38,7 +38,8 @@ Full catalog with descriptions: [docs/catalog.md](docs/catalog.md)
 The signature feature. Pick once, persistent across sessions.
 
 ```bash
-/style rigor       # terse, asks first, surfaces assumptions
+/style rigor       # terse, asks first, states assumptions
+/style devil       # challenges your technical choices, forces tradeoffs
 /style caveman     # compressed cave-speak (max token savings)
 /style teacher     # verbose, walks reasoning
 /style executive   # TL;DR + Why this matters + details

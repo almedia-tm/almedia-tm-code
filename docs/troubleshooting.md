@@ -23,7 +23,7 @@ should show `almedia-code@almedia-code`. If absent, re-run `npx @almedia-tm/alme
 
 ## My custom style isn't loading
 
-The `style-activate` hook only loads styles named in its valid-list. v1 ships only `rigor`, `caveman`, `teacher`, `executive`, `default`. Custom-style support comes in v1.1.
+The `style-activate` hook only loads styles named in its valid-list. v1 ships only `rigor`, `devil`, `caveman`, `teacher`, `executive`, `default`. Custom-style support comes in v1.1.
 
 ## `caveman-shrink` MCP not compressing anything
 

@@ -5,11 +5,12 @@ description: Use when the user asks for a different output style — shorter, lo
 
 # Switch Style Skill
 
-The user wants a different output style. Map their request to one of the 5 style profiles and switch.
+The user wants a different output style. Map their request to one of the 6 style profiles and switch.
 
 ## Action
 1. Map intent to profile:
    - "concise", "terse", "main points only", "no fluff" → `rigor`
+   - "disagree with me", "challenge me", "push back", "devil's advocate" → `devil`
    - "TL;DR", "executive summary", "decision first" → `executive`
    - "explain", "verbose", "walk me through" → `teacher`
    - "compress", "save tokens", "ultra terse" → `caveman`

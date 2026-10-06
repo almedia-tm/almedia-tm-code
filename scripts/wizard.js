@@ -3,11 +3,12 @@
 const path = require('path');
 
 const STYLE_OPTIONS = [
-  { value: 'rigor',     title: 'rigor — terse, asks first, surfaces assumptions' },
-  { value: 'caveman',   title: 'caveman — compressed for max token savings' },
-  { value: 'teacher',   title: 'teacher — verbose, walks reasoning' },
-  { value: 'executive', title: 'executive — TL;DR + Why this matters + details' },
-  { value: 'default',   title: 'default — vanilla Claude Code' },
+  { value: 'rigor',     title: 'rigor: terse, asks first, states assumptions' },
+  { value: 'devil',     title: 'devil: challenges your technical choices, forces tradeoffs' },
+  { value: 'caveman',   title: 'caveman: compressed for max token savings' },
+  { value: 'teacher',   title: 'teacher: verbose, walks reasoning' },
+  { value: 'executive', title: 'executive: TL;DR + Why this matters + details' },
+  { value: 'default',   title: 'default: vanilla Claude Code' },
 ];
 
 async function run(opts = {}) {
@@ -26,7 +27,7 @@ async function run(opts = {}) {
     name: 'style',
     message: 'Choose your default output style:',
     choices: STYLE_OPTIONS.map((s) => ({ title: s.title, value: s.value })),
-    initial: 4, // default
+    initial: 5,
   });
 
   const addonsAnswer = await prompts({
@@ -50,7 +51,7 @@ async function run(opts = {}) {
   if (!opts.noTour) {
     process.stdout.write('\nQuick tour:\n');
     process.stdout.write('  Slash commands you will use most: /plan, /tdd, /code-review, /verify\n');
-    process.stdout.write('  Switch styles any time: /style <rigor|caveman|teacher|executive|default>\n');
+    process.stdout.write('  Switch styles any time: /style <rigor|devil|caveman|teacher|executive|default>\n');
     process.stdout.write('  Catalog: docs/catalog.md\n');
     process.stdout.write('  Uninstall: npx @almedia-tm/almedia-code uninstall\n\n');
   }

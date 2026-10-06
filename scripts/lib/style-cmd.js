@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const os = require('os');
 
-const VALID = ['rigor', 'caveman', 'teacher', 'executive', 'default'];
+const VALID = ['rigor', 'devil', 'caveman', 'teacher', 'executive', 'default'];
 
 async function run(argv) {
   const flag = path.join(os.homedir(), '.claude', '.style-active');
